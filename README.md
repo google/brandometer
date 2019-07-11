@@ -52,6 +52,8 @@ Make a note of the "target url" value.
 * https://console.cloud.google.com/bigquery and Enable BigQuery
 * https://console.cloud.google.com/logs/exports to set up log exports
 * Click "Create Export"
+* Set time filter to "No limit"
+* Click "Submit Filter"
 * Set sink name: "BQ"
 * Set sink service: "Bigquery"
 * Set sink destination: 

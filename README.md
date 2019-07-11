@@ -74,30 +74,29 @@ Make a note of the "target url" value.
 
 SELECT
   timestamp,
-  REGEXP_EXTRACT(protoPayload.resource, r"av=([^&]+)") AS av,
   REGEXP_EXTRACT(protoPayload.resource, r"id=([^&]+)") AS id,
   REGEXP_EXTRACT(protoPayload.resource, r"seg=([^&]+)") AS seg,
-  SAFE_CAST(REGEXP_EXTRACT(REGEXP_EXTRACT(protoPayload.resource, r'times=([^&]+)'),r'^(d+)%7C') as int64) AS render_to_q1_time_ms,
-  SAFE_CAST(REGEXP_EXTRACT(REGEXP_EXTRACT(protoPayload.resource, r'times=([^&]+)'),r'^d+%7C(d+)$') as int64) AS q1_to_end_time_ms,
-  ARRAY_LENGTH(SPLIT(REGEXP_EXTRACT(protoPayload.resource, r'response=([^&]+)'),'%7C')) as num_questions,
-  REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_EXTRACT(protoPayload.resource, r"response=([^&]+)"), r"%3A",":"),"%7C","|") AS response,
-  REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_EXTRACT(protoPayload.resource, r"visual=([^&]+)"), r"%3A",":"),"%7C","|") AS visual_response,
-  REGEXP_EXTRACT(protoPayload.line[OFFSET(0)].logMessage, r"(?i:ResponseReceiver):\s*(.*?)\s*$") AS location,
-  REGEXP_EXTRACT(protoPayload.resource, r"(?:cid|bomid)=([^&]+)") AS bomid,
-  REGEXP_EXTRACT(protoPayload.line[OFFSET(1)].logMessage, r"bomcookie=([^;]+);") AS bomCookie,
-  REGEXP_EXTRACT(protoPayload.resource, r"size=([^&]+)") AS size,
-  protoPayload.userAgent AS userAgent,
-  REGEXP_EXTRACT(protoPayload.resource, r"response=([^&]+)") AS rawResponse,
-  protoPayload.requestId AS protoPayload_requestId,
-  protoPayload.line[OFFSET(0)].logMessage AS logMessage,
-  protoPayload.line[OFFSET(1)].logMessage AS bomCookieLogRaw,
-  protoPayload.resource AS rawResource
-FROM `[TODO set your_project_name].appengine_logs.appengine_googleapis_com_request_log_*`
+  SAFE_CAST(REGEXP_EXTRACT(REGEXP_EXTRACT(protoPayload.resource, r'times=([^&]+)'),r'^(d+)%7C') AS INT64) AS render_to_q1_time_ms,
+  SAFE_CAST(REGEXP_EXTRACT(REGEXP_EXTRACT(protoPayload.resource, r'times=([^&]+)'),r'^d+%7C(d+)$') AS INT64) AS q1_to_end_time_ms,
+  ARRAY_LENGTH(SPLIT(REGEXP_EXTRACT(protoPayload.resource, r'response=([^&]+)'),'%7C')) AS num_questions,
+  REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_EXTRACT(protoPayload.resource, r'response=([^&]+)'), r'%3A',':'),'%7C','|') AS response,
+  REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_EXTRACT(protoPayload.resource, r'visual=([^&]+)'), r'%3A',':'),'%7C','|') AS visual_response,  
+  REGEXP_EXTRACT(protoPayload.resource, r'(?:cid|bomid)=([^&]+)') AS bom_id,
+  REGEXP_EXTRACT(protoPayload.line[SAFE_OFFSET(1)].logMessage, r'bomcookie=([^;]+);') AS bom_cookie,
+  REGEXP_EXTRACT(protoPayload.resource, r'size=([^&]+)') AS size,
+  protoPayload.userAgent AS user_agent,
+  REGEXP_EXTRACT(protoPayload.resource, r'response=([^&]+)') AS raw_response,
+  protoPayload.requestId AS protoPayload_request_id,
+  protoPayload.line[SAFE_OFFSET(0)].logMessage AS log_message,
+  protoPayload.line[SAFE_OFFSET(1)].logMessage AS bom_cookie_log_raw,
+  protoPayload.resource AS raw_resource
+FROM
+  `[your-project-id].appengine_logs.appengine_googleapis_com_request_log_*`
 WHERE
-_TABLE_SUFFIX = format_date('%Y%m%d', date_sub(current_date(), interval 1 day))
-AND protoPayload.method = "GET"
-AND protoPayload.wasLoadingRequest IS NULL
-AND REGEXP_CONTAINS(protoPayload.resource, "^\\/measure\\?.*")
+  _TABLE_SUFFIX = FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 1 day))
+  AND protoPayload.method = 'GET'
+  AND protoPayload.wasLoadingRequest IS NULL
+  AND REGEXP_CONTAINS(protoPayload.resource, r'^/measure\?.*')
 ```
 
 ## Step 7 - Report on surveys
@@ -105,32 +104,37 @@ AND REGEXP_CONTAINS(protoPayload.resource, "^\\/measure\\?.*")
 Sample query:
 
 ```SQL
-SELECT
-  DATE(timestamp) dt, 
-  NTH(1, SPLIT(seg,'_')) age,
-  NTH(2, SPLIT(seg,'_')) gender,
-  NTH(2, SPLIT(NTH(1, SPLIT(response,'|')),':')) response1,
-  NTH(2, SPLIT(NTH(2, SPLIT(response,'|')),':')) response2,
-  NTH(2, SPLIT(NTH(3, SPLIT(response,'|')),':')) response3,
-
-  FROM (
-    SELECT
-      bomcookie,
-      FIRST(seg) seg,
-      FIRST(location) location,
-      FIRST(response) response,
-      FIRST(timestamp) timestamp 
-    FROM
-      TABLE_DATE_RANGE(
-        [[your_project_name].dailySet.dailyResult_],
-        TIMESTAMP(2019-07-01),
-        current_timestamp()
-      )
+#standardSQL
+WITH
+  RawData AS (
+  SELECT
+    bom_cookie,
+    seg,
+    response,
+    `timestamp`,
+    ROW_NUMBER() OVER (PARTITION BY bom_cookie ORDER BY `timestamp`) response_number
+  FROM
+    `[your-project-id].dailySet.dailyResult_*`
   WHERE
-    id = "[your_unique_study_id]"
-    GROUP BY bomcookie
-    ORDER BY timestamp ASC
-  )
+    _TABLE_SUFFIX BETWEEN '20190701' #Study Start Date
+    AND FORMAT_DATE('%Y%m%d', CURRENT_DATE())
+    AND id = '5658514613600256' ),
+  CoreData AS (
+  SELECT
+    bomcookie,
+    seg,
+    response,
+    `timestamp`
+  FROM RawData
+  WHERE response_number = 1)
+SELECT
+  #For compliance, ensure that bom_cookie is not exported in final report.
+  FORMAT_TIMESTAMP('%F', `timestamp`) `date`,
+  seg,
+  SPLIT(SPLIT(response, '|')[SAFE_ORDINAL(1)],':')[SAFE_ORDINAL(2)] AS response1,
+  SPLIT(SPLIT(response, '|')[SAFE_ORDINAL(2)],':')[SAFE_ORDINAL(2)] AS response2
+FROM
+  CoreData
 ```
 
 # Notes and checklists

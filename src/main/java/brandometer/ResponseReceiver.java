@@ -15,36 +15,28 @@ limitations under the License.
 */
 package brandometer;
 
-import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Brandometer survey response reveiver Logs GeoInformation of the requests for Reporting purpose
- * on BigQuery
+ * BrandOMeter survey response receiver.
+ *
+ * <p>Logs the user's cookie information if not already present.
  */
 public class ResponseReceiver extends HttpServlet {
 
   public static final String BOM_COOKIE_NAME = "bomcook";
-  public static final Integer BOM_COOKIE_EXPIRY = 365 * 24 * 60 * 60; // 1 Year In Seconds
+  public static final int BOM_COOKIE_EXPIRY = (int) Duration.ofDays(90).getSeconds();
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
-    String country = req.getHeader("X-AppEngine-Country");
-    String region = req.getHeader("X-AppEngine-Region");
-    String city = req.getHeader("X-AppEngine-City");
-
-    log(country + "/" + region + "/" + city);
-
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     // Get the cookie or set
-
     Cookie bomCookie =
         Arrays.stream(Optional.ofNullable(req.getCookies()).orElse(new Cookie[] {}))
             .filter(cookie -> cookie.getName().equals(BOM_COOKIE_NAME))

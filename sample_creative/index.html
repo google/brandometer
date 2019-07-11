@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="ad.size" content="width=300,height=250">
+    <meta charset="UTF-8">
+    <script>
+        var clickTag = "http://www.google.com";
+    </script>
+    <script src="config.js"></script>
+    <script src="controller.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="master.css">
+</head>
+
+<body>
+    <div id="master_container">
+        <div id="survey_container">
+            <div id="question_container" class="Qbox">
+                <span id="question_text">
+                    Sample Question
+                </span>
+            </div>
+            <div id="option_container_0" class="Abox">
+                <div id="option_text_0" class="AText">opt1</div>
+            </div>
+            <div id="option_container_1" class="Abox">
+                <div id="option_text_1" class="AText">opt2</div>
+            </div>
+            <div id="option_container_2" class="Abox">
+                <div id="option_text_2" class="AText">opt3</div>
+            </div>
+            <div id="option_container_3" class="Abox">
+                <div id="option_text_3" class="AText">opt4</div>
+            </div>
+            <div id="option_container_4" class="Abox">
+                <div id="option_text_4" class="AText">opt5</div>
+            </div>
+
+        </div>
+        <div id="thankyou_container" class="invisible">
+            <div id="thankyou_text"></div>
+        </div>
+        <div id="bottom_container">
+            <span id="question_comment"></span><span id="next_button">Next</span>
+        </div>
+    </div>
+    <script>
+        runFSM();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+.invisible {
+    display: none;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    margin: 0;
+}
+
+#master_container {
+    width: 300px;
+    height: 250px;
+    border: solid black 1px;
+}
+
+#survey_container {
+    padding: 7px;
+    padding-bottom: 3px;
+}
+
+.Qbox {
+    padding: 2px 5px;
+    height: 45px;
+    width: 274px;
+    border: 1px solid rgba(255, 255, 255, 0.290196);
+    border-radius: 5px;
+    color: white;
+    text-shadow: rgba(0, 0, 0, 0.8) 1px 1px 1px;
+    background-color: rgba(255, 255, 255, 0.14902);
+    box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 3px 0px;
+    display: table;
+}
+
+.Qbox span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.Abox {
+    border: 1px solid rgba(255, 255, 255, 0.290196);
+    border-radius: 5px;
+    text-shadow: rgba(0, 0, 0, 0.8) 1px 1px 1px;
+    background-color: rgba(255, 255, 255, 0.14902);
+    box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 3px 0px;
+    position: relative;
+    margin: 4px 0;
+}
+
+.Abox[selected="true"] {
+    background-color: rgba(255, 127, 0, 0.7);
+}
+
+.Abox:hover {
+    cursor: pointer;
+    background-color: rgba(255, 127, 0, 0.4);
+}
+
+.AText {
+    color: white;
+    text-shadow: rgba(0, 0, 0, 0.8) 1px 1px 1px;
+    padding-left: 5px;
+    font-size: 12px;
+    height: 27px;
+    line-height: 27px;
+}
+
+#bottom_container {
+    position: relative;
+}
+
+#next_button {
+    position: absolute;
+    right: 8px;
+    top: -6px;
+    font-size: 13px;
+    color: beige;
+    padding: 3px 15px;
+    text-shadow: rgba(0, 0, 0, 1) 1px 1px 1px;
+    background-color: rgba(255, 200, 0, 0.6);
+    cursor: pointer;
+}
+
+#next_button:hover {
+    background-color: rgba(255, 127, 80, 0.8);
+    color: white;
+}
+
+#question_comment {
+    color: #e8e7e7;
+    margin: 0 -2px 0 7px;
+    font-size: 13px;
+}
+
+.thankyoucontainer {
+    height: 100px;
+    width: 300px;
+    position: absolute;
+    top: 100px;
+    left: 0px;
+    text-align: center;
+    font-size: 26px;
+    color: beige;
+    text-shadow: rgba(0, 0, 0, 0.8) 2px 2px 2px
+}

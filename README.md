@@ -52,21 +52,27 @@ Make a note of the "target url" value.
 * https://console.cloud.google.com/bigquery and Enable BigQuery
 * https://console.cloud.google.com/logs/exports to set up log exports
 * Click "Create Export"
-* Set time filter to "No limit"
+* Set time filter to ```No limit```
 * Click "Submit Filter"
-* Set sink name: "BQ"
-* Set sink service: "Bigquery"
+* Set sink name: ```BQ```
+* Set sink service: ```Bigquery```
 * Set sink destination: 
   * "Create new BigQuery dataset"
-  * Set dataset name: "appengine_logs"
+  * Set dataset name: ```appengine_logs```
 
 ## Step 6 - Schedule daily data preparation in BigQuery
 
 * Update SQL below to reference your project name and paste into BigQuery query page - https://console.cloud.google.com/bigquery
+* Create destination dataset
+  * Create "CREATE DATASET"
+  * Set dataset ID: ```dailySet```
+  * Set default table expiration: ```Never```
+  * Click "Create Dataset"
+* Paste and run query below to test
 * Run query to test
 * Click "Schedule Query" and schedule to run daily
-  * Dataset name: "dailySet"
-  * Table name: "dailyResult_{run_time-1h|"%Y%m%d"}"
+  * Dataset name: ```dailySet```
+  * Table name: ```dailyResult_{run_time-1h|"%Y%m%d"}```
   * Destination table write preference: "Overwrite table"
 
 ```SQL
@@ -116,12 +122,12 @@ WITH
   FROM
     `[your-project-id].dailySet.dailyResult_*`
   WHERE
-    _TABLE_SUFFIX BETWEEN '20190701' #Study Start Date
+    _TABLE_SUFFIX BETWEEN '20190701' # Update to match your study date
     AND FORMAT_DATE('%Y%m%d', CURRENT_DATE())
-    AND id = '5658514613600256' ),
+    AND id = '[your_unique_study_id]' ),
   CoreData AS (
   SELECT
-    bomcookie,
+    bom_cookie,
     seg,
     response,
     `timestamp`

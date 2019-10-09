@@ -47,6 +47,14 @@ Make a note of the "target url" value.
     * Set the unique ID on config.js
     * Update questions and options to match your survey needs.
 
+### Note 
+This server only has one functional responsibility i.e to log the details of GET requests coming on the path `<your_target_url/measure?param1=value1&param2=value2` on the app engine logs. _(You can view the logs using the StackDriver Log service in GCP.)_ 
+The format of the GET request is like : `https://[your_target url]/measure?type=survey&id={survey_id}&seg={seg}&response={responses}&visual={visual_responses}&creative_size={size}&randomtimestamp={random_timestamp}&bomid={bomid}&times={time_measurement}` as mentioned in the /brandometer/sample_creative/config.js file.
+
+Further more,
+* This server *DOES NOT* host the creative web files (htmls/js). 
+* Hitting any other url path like the `https:<your_target_url>/` will give a 404 as expected. The only path mapped is `/measure` as mentioned above.
+
 ## Step 5 - Connect logs to BigQuery
 
 * https://console.cloud.google.com/bigquery and Enable BigQuery

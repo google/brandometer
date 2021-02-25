@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Survey Creation</h1>
+<form action="" method="post">
+	{{ form.hidden_tag() }}
+	<p>
+	{{ form.surveyname.label }}
+	{{ form.surveyname(size=50) }}
+	</p>
+	<p>
+	{{ form.question1.label }}
+	{{ form.question1(size=40) }}
+	</p>
+	<p>
+	{{ form.answer1a.label }}
+	{{ form.answer1a(size=32) }}<br>
+	{{ form.answer1b.label }}
+	{{ form.answer1b(size=32)}}<br>  
+	{{ form.answer1c.label }}
+	{{ form.answer1c(size=32) }}<br>
+	{{ form.answer1d.label }}
+	{{ form.answer1d(size=32) }}<br>
+	</p>
+	<p>
+	{{ form.question2.label }} 
+	{{ form.question2(size=40) }}
+	</p>
+	<p>
+	{{ form.answer2a.label }}
+	{{ form.answer2a(size=32) }}<br>
+	{{ form.answer2b.label }}
+	{{ form.answer2b(size=32) }}<br>
+	{{ form.answer2c.label }}
+	{{ form.answer2c(size=32) }}<br>
+	{{ form.answer2d.label }}
+	{{ form.answer2d(size=32) }}<br>
+	</p>
+	<p>
+	{{ form.question3.label }}
+	{{ form.question3(size=40) }}
+	</p>
+	<p>	
+	{{ form.answer3a.label }}
+	{{ form.answer3a(size=32) }}<br>
+	{{ form.answer3b.label }}
+	{{ form.answer3b(size=32) }}<br>
+	{{ form.answer3c.label }}
+	{{ form.answer3c(size=32) }}<br>
+	{{ form.answer3d.label }}
+	{{ form.answer3d(size=32) }}<br>
+	</p>
+	<p>
+	{{ form.question4.label }}
+	{{ form.question4(size=40) }}
+	</p>
+	<p>
+	{{ form.answer4a.label }}
+	{{ form.answer4a(size=32) }}<br>
+	{{ form.answer4b.label }}
+	{{ form.answer4b(size=32) }}<br>
+	{{ form.answer4c.label }}
+	{{ form.answer4c(size=32) }}<br>
+	{{ form.answer4d.label }}
+	{{ form.answer4d(size=32) }}<br>
+	</p>
+	<p>
+	{{ form.question5.label }}
+	{{ form.question5(size=40) }}
+	</p>
+	<p>
+	{{ form.answer5a.label }}
+	{{ form.answer5a(size=32) }}<br>
+	{{ form.answer5b.label }}
+	{{ form.answer5b(size=32) }}<br>
+	{{ form.answer5c.label }}
+	{{ form.answer5c(size=32) }}<br>
+	{{ form.answer5d.label }}
+	{{ form.answer5d(size=32) }}<br>
+	</p>
+	<p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
+
+

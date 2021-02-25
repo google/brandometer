@@ -1,12 +1,20 @@
-"""TODO(jerraldwee): DO NOT SUBMIT without one-line documentation for receiver.
-
-TODO(jerraldwee): DO NOT SUBMIT without a detailed description of receiver.
 """
-# function of the receiver is to take into parameters and process them accordingly, 
-# writing the required information into a bigquery table.
-# file is to be written into 'main.py' on google cloud functions
+# Documentation of receiver: It takes in responses from end users that have
+# completed the creative deployed by customers and writes the required data into
+# BigQuery on Google Cloud Platform.
+
+# Description of receiver:
+# The function of the receiver is to capture the survey responses from end
+# users, which comes in a string format with parameters. The receiver processes
+# all incoming responses and creates a bigquery table if there is no existing
+# one. If a bigquery table exists, the data would be written to its
+# corresponding columns and rows. The receiver exists on the Google Cloud
+# Platform with an external public HTTP endpoint in the US-Central1 region and
+# is able to receive all responses from the end users. 
+
+"""
+
 import logging
-import datetime
 
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
@@ -19,7 +27,6 @@ def receiver(request):
   client = bigquery.Client()
   table_id = "jerraldwee-testing.jerraldwee_test.jerraldwee_test_receiver"
 
-  # Check if table exists. https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists
   try:
     client.get_table(table_id)  # Make an API request.
     print("Table {} already exists.".format(table_id))
@@ -32,7 +39,7 @@ def receiver(request):
       bigquery.SchemaField("Segmentation","String",mode="REQUIRED"),
       bigquery.SchemaField("Response","String",mode="REQUIRED"),
       bigquery.SchemaField("Visual","String",mode="REQUIRED"),
-      bigquery.SchemaField("Creative_Size","String",mode="REQUIRED"),
+      bigquery.SchemaField("CreativeSize","String",mode="REQUIRED"),
       bigquery.SchemaField("RandomTimeStamp","String",mode="REQUIRED"),
       bigquery.SchemaField("BomID","String",mode="REQUIRED"),
     ]
@@ -40,17 +47,7 @@ def receiver(request):
     table = client.create_table(table)
     print("Created table {}.{}.{}".format(table.project, table.dataset_id, table.table_id))
 
-  # Write params into table.
-  # params = {?type=survey&id=5694467986161664&seg=Female_25-34_expose&response=1%3AA&visual=1%3AC&creative_size=300x250&randomtimestamp=2236200.2053949493&bomid=d06c2dea-892f-45f3-a038-bef0ba75fad4&times=24380%7C0 }
-  # type=survey&
-  # id=5694467986161664&
-  # seg=Female_25-34_expose&
-  # response=1%3AA&
-  # visual=1%3AC&
-  # creative_size=300x250&
-  # randomtimestamp=2236200.2053949493&
-  # bomid=d06c2dea-892f-45f3-a038-bef0ba75fad4&
-  # times=24380%7C0 }
+  # Writing parameters into bigquery table.
 
   row_to_insert = {
       "Type": params.get("type"),
@@ -58,12 +55,11 @@ def receiver(request):
       "Segmentation": params.get("seg"),
       "Response": params.get("response"),
       "Visual": params.get("visual"),
-      "Creative_Size": params.get("creative_size"),
+      "CreativeSize": params.get("creative_size"),
       "RandomTimeStamp": params.get("randomtimestamp"),
       "BomID": params.get("bomid"),
-      # TODO: Jerrald to complete based on params list above
   }
 
   errors = client.insert_rows_json(table_id, [row_to_insert])
 
-  return "done"
+  return {errors:errors}

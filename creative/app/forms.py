@@ -34,4 +34,4 @@ class QuestionForm(FlaskForm):
     answer5b = StringField('Answer5b')
     answer5c = StringField('Answer5c')
     answer5d = StringField('Answer5d')
-    submit = SubmitField('Create')
+    submit = SubmitField('Submit')

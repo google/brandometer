@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+
+<body>
+        <div class="table-responsive-sm">
+                <table class="table table-bordered">
+                        <caption style="text-align:center">List Of Surveys</caption>
+                        <thead class="thead-light">
+                                <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">JSON</th>
+                                        <th scope="col">Info</th>
+                                        <th scope="col">Action</th>
+                                </tr>
+                        </thead>
+                        {% for survey in all_surveys %}
+                        <tr>
+                                <td>{{ survey.id }}</td>
+                                <td>{{ (survey.to_dict())['SurveyName'] }}</td>
+                                <td>{{ survey.to_dict() }}</td>
+                                <td>
+                                        <table class="table">
+                                                <tr><td>{{ (survey.to_dict())['Question1'] }} </td></tr>
+                                                <tr><td>{{ (survey.to_dict())['Answer1a'] }} </td></tr>
+                                                <tr><td>{{ (survey.to_dict())['Answer1b'] }} </td></tr>
+                                                <tr><td>{{ (survey.to_dict())['Answer1c'] }} </td></tr>
+                                                <tr><td>{{ (survey.to_dict())['Answer1d'] }} </td></tr>
+                                        </table>
+                                </td>
+                                <td><form><a href="/delete?id={{survey.id}}"><button type="button" onclick="alert('Survey Deleted!')">Delete</button></a><a href="/edit?id={{survey.id}}"><button type="button">Edit</button></a></form></td>
+                        </tr>
+                        {% endfor %}
+                </table>
+        </div>
+
+</body>
+
+{% endblock content %}

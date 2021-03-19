@@ -1,9 +1,9 @@
 from flask import Flask
-from config import Config
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config['SECRET_KEY']='supersecretkey'
+Bootstrap(app)
 
-from app import routes
-from app import forms
-
+from . import forms
+from . import routes

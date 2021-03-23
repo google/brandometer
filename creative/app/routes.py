@@ -35,6 +35,7 @@ def surveycreation():
 
         for doc in users_ref.stream():
             print(u'{} => {}'.format(doc.id, doc.to_dict()))
+        flash(f"{form.surveyname.data} is created as {doc_ref.id}")
 
         return redirect(url_for('index'))
 
@@ -45,6 +46,7 @@ def delete():
     if request.method =="GET":
         docref_id = request.args.get('id')
         doc_ref.document(docref_id).delete()
+        flash(f"Survey with ID: {docref_id} is deleted")
     return redirect(url_for('index'))
 
 @app.route('/edit', methods=["POST","PUT","GET"])
@@ -70,5 +72,6 @@ def edit():
                 }
         edit_doc = db.collection(u'Surveys').document(docref_id)
         edit_doc.update(data)
+        flash(f"Survey with ID: {docref_id} is edited")
         return redirect(url_for('index'))
     return render_template('questions.html', form=form)

@@ -36,7 +36,13 @@
             <tr><td>{{ (survey.to_dict())['Answer1d'] }} </td></tr>
           </table>
         </td>
-        <td><form><a href="/delete?id={{survey.id}}"><button type="button">Delete</button></a><a href="/edit?id={{survey.id}}"><button type="button">Edit</button></a></form></td>
+        <td>
+          <form>
+            <a href="/creative/preview/{{survey.id}}"><button type="button">Preview</button></a><br>
+            <a href="/delete?id={{survey.id}}"><button type="button">Delete</button></a><br>
+            <a href="/edit?id={{survey.id}}"><button type="button">Edit</button></a>
+          </form>
+        </td>
       </tr>
       {% endfor %}
     </table>

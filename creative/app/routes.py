@@ -2,13 +2,17 @@ from google.cloud import firestore
 from flask import render_template, request, flash, redirect, url_for, jsonify
 from .forms import QuestionForm
 from . import app
+import zipfile
+import io
+import pathlib
+from flask import send_file
 
 db=firestore.Client()
-doc_ref=db.collection(u'Surveys')
+survey_collection=db.collection(u'Surveys')
 
 @app.route('/index')
 def index():
-  all_surveys= doc_ref.stream()
+  all_surveys = survey_collection.stream()
   return render_template('index.html', all_surveys = all_surveys)
 
 @app.route('/surveycreation',methods=['GET','POST'])
@@ -24,15 +28,16 @@ def surveycreation():
           u'Answer1c': form.answer1c.data,
           u'Answer1d': form.answer1d.data,
           u'Question2': form.question2.data,
-          u'Answer2a': form.answer2a.data
+          u'Answer2a': form.answer2a.data,
+          u'Answer2b': form.answer2b.data,
+          u'Answer2c': form.answer2c.data,
+          u'Answer2d': form.answer2d.data,
       }
 
-      doc_ref = db.collection(u'Surveys').document()
+      doc_ref = survey_collection.document()
       doc_ref.set(data)
       # Then query for documents
-      users_ref = db.collection(u'Surveys')
-
-      for doc in users_ref.stream():
+      for doc in survey_collection.stream():
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
       flash(f"{form.surveyname.data} is created as {doc_ref.id}")
 
@@ -42,8 +47,7 @@ def surveycreation():
 
 @app.route('/creative/preview/<string:survey_id>', methods=['GET'])
 def preview_creative(survey_id):
-  db = firestore.Client()
-  doc_ref = db.collection(u'Surveys').document(survey_id)
+  doc_ref = survey_collection.document(survey_id)
   survey_doc = doc_ref.get()
   if survey_doc.exists:
     survey = survey_doc.to_dict()
@@ -87,7 +91,7 @@ def get_question_json(survey):
 def delete():
     if request.method =="GET":
         docref_id = request.args.get('id')
-        doc_ref.document(docref_id).delete()
+        survey_collection.document(docref_id).delete()
         flash(f"Survey with ID: {docref_id} is deleted")
     return redirect(url_for('index'))
 
@@ -95,7 +99,7 @@ def delete():
 def edit():
     form = QuestionForm()
     docref_id = request.args.get('id')
-    edit_doc = doc_ref.document(docref_id).get()
+    edit_doc = survey_collection.document(docref_id).get()
     if request.method == 'GET':
         form.surveyname.data = edit_doc.get('SurveyName',)
         form.question1.data = edit_doc.get('Question1',)
@@ -112,8 +116,26 @@ def edit():
           u'Answer1c': form.answer1c.data,
           u'Answer1d': form.answer1d.data
       }
-      edit_doc = db.collection(u'Surveys').document(docref_id)
+      edit_doc = survey_collection.document(docref_id)
       edit_doc.update(data)
       flash(f"Survey with ID: {docref_id} is edited")
       return redirect(url_for('index'))
     return render_template('questions.html', form=form)
+
+@app.route('/download_zip/<string:survey_id>',methods=["GET"])
+def download_zip(survey_id):
+    data = io.BytesIO()
+
+    with zipfile.ZipFile(data, mode='w') as z:
+        doc_ref = survey_collection.document(survey_id)
+        survey_doc = doc_ref.get()
+        survey = survey_doc.to_dict()
+        survey_html = render_template('creative.html',survey=survey,all_question_json=get_question_json(survey))
+        z.writestr("index.html", survey_html)
+
+    data.seek(0)
+    return send_file(
+        data,
+        mimetype='application/zip',
+        as_attachment=True,
+        attachment_filename='surveycreative.zip')

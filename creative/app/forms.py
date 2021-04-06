@@ -4,10 +4,15 @@ Description of QuestionForm: Generates a survey name field input and
 input of the customers and create a survey based on user input.
 """
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 
 class QuestionForm(FlaskForm):
+    question1type = SelectField('Question1Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
+    question2type = SelectField('Question2Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
+    question3type = SelectField('Question3Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
+    question4type = SelectField('Question4Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
+    question5type = SelectField('Question5Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
     surveyname = StringField('SurveyName',validators=[DataRequired()])
     question1 = StringField('Question1',validators=[DataRequired()])
     answer1a = StringField('Answer1a', validators=[DataRequired()])

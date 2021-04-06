@@ -1,11 +1,10 @@
 from google.cloud import firestore
-from flask import render_template, request, flash, redirect, url_for, jsonify
+from flask import render_template, request, flash, redirect, url_for, jsonify, send_file
 from .forms import QuestionForm
 from . import app
 import zipfile
 import io
 import pathlib
-from flask import send_file
 
 db=firestore.Client()
 survey_collection=db.collection(u'Surveys')
@@ -21,6 +20,11 @@ def surveycreation():
 
     if form.validate_on_submit():
       data = {
+          u'Question1Type' : form.question1type.data,
+          u'Question2Type' : form.question2type.data,
+          u'Question3Type' : form.question3type.data,
+          u'Question4Type' : form.question4type.data,
+          u'Question5Type' : form.question5type.data,
           u'SurveyName': form.surveyname.data,
           u'Question1': form.question1.data,
           u'Answer1a': form.answer1a.data,
@@ -32,6 +36,11 @@ def surveycreation():
           u'Answer2b': form.answer2b.data,
           u'Answer2c': form.answer2c.data,
           u'Answer2d': form.answer2d.data,
+          u'Question3': form.question3.data,
+          u'Answer3a': form.answer3a.data,
+          u'Answer3b': form.answer3b.data,
+          u'Answer3c': form.answer3c.data,
+          u'Answer3d': form.answer3d.data,
       }
 
       doc_ref = survey_collection.document()
@@ -65,10 +74,11 @@ def get_question_json(survey):
     question_text = survey.get('Question' + str(i), '')
     options = []
     next_question = {}
+    question_type = survey.get('Question' + str(i) + 'Type')
     if question_text:
       question = {
           'id': i,
-          'type': 'SINGLE_OPTION',  # TODO handle MULTIPLE_OPTION as well
+          'type': question_type,
           'text': question_text,
           'options': options,
           'next_question': next_question
@@ -107,6 +117,21 @@ def edit():
         form.answer1b.data = edit_doc.get('Answer1b',)
         form.answer1c.data = edit_doc.get('Answer1c',)
         form.answer1d.data = edit_doc.get('Answer1d',)
+        form.question2.data = edit_doc.get('Question2',)
+        form.answer2a.data = edit_doc.get('Answer2a',)
+        form.answer2b.data = edit_doc.get('Answer2b',)
+        form.answer2c.data = edit_doc.get('Answer2c',)
+        form.answer2d.data = edit_doc.get('Answer2d',)
+        form.question3.data = edit_doc.get('Question3',)
+        form.answer3a.data = edit_doc.get('Answer3a',)
+        form.answer3b.data = edit_doc.get('Answer3b',)
+        form.answer3c.data = edit_doc.get('Answer3c',)
+        form.answer3d.data = edit_doc.get('Answer3d',)
+        form.question1type.data = edit_doc.get('Question1Type',)
+        form.question2type.data = edit_doc.get('Question2Type',)
+        form.question3type.data = edit_doc.get('Question3Type',)
+        form.question4type.data = edit_doc.get('Question4Type',)
+        form.question5type.data = edit_doc.get('Question5Type',)
     if form.validate_on_submit():
       data = {
           u'SurveyName': form.surveyname.data,
@@ -114,7 +139,22 @@ def edit():
           u'Answer1a': form.answer1a.data,
           u'Answer1b': form.answer1b.data,
           u'Answer1c': form.answer1c.data,
-          u'Answer1d': form.answer1d.data
+          u'Answer1d': form.answer1d.data,
+          u'Question2': form.question2.data,
+          u'Answer2a': form.answer2a.data,
+          u'Answer2b': form.answer2b.data,
+          u'Answer2c': form.answer2c.data,
+          u'Answer2d': form.answer2d.data,
+          u'Question3': form.question3.data,
+          u'Answer3a': form.answer3a.data,
+          u'Answer3b': form.answer3b.data,
+          u'Answer3c': form.answer3c.data,
+          u'Answer3d': form.answer3d.data,
+          u'Question1Type': form.question1type.data,
+          u'Question2Type': form.question2type.data,
+          u'Question3Type': form.question3type.data,
+          u'Question4Type': form.question4type.data,
+          u'Question5Type': form.question5type.data
       }
       edit_doc = survey_collection.document(docref_id)
       edit_doc.update(data)

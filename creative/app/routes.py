@@ -41,6 +41,18 @@ def surveycreation():
           u'Answer3b': form.answer3b.data,
           u'Answer3c': form.answer3c.data,
           u'Answer3d': form.answer3d.data,
+          u'Answer1aNext': form.answer1anext.data,
+          u'Answer1bNext': form.answer1bnext.data,
+          u'Answer1cNext': form.answer1cnext.data,
+          u'Answer1dNext': form.answer1dnext.data,
+          u'Answer2aNext': form.answer2anext.data,
+          u'Answer2bNext': form.answer2bnext.data,
+          u'Answer2cNext': form.answer2cnext.data,
+          u'Answer2dNext': form.answer2dnext.data,
+          u'Answer3aNext': form.answer3anext.data,
+          u'Answer3bNext': form.answer3bnext.data,
+          u'Answer3cNext': form.answer3cnext.data,
+          u'Answer3dNext': form.answer3dnext.data
       }
 
       doc_ref = survey_collection.document()
@@ -83,7 +95,7 @@ def get_question_json(survey):
           'options': options,
           'next_question': next_question
       }
-      for j in ['a', 'b', 'c', 'd', 'e']:
+      for j in ['a', 'b', 'c', 'd']:
         answer_text = survey.get('Answer' + str(i) + j, '')
         if answer_text:
           answer_id = j.capitalize()
@@ -92,7 +104,7 @@ def get_question_json(survey):
               'role': 'option',
               'text': answer_text
           })
-          next_question[answer_id] = 'end'
+          next_question[answer_id] = survey.get('Answer' + str(i) + j + 'Next','')
       all_question_json.append(question)
 
   return all_question_json
@@ -132,6 +144,18 @@ def edit():
         form.question3type.data = edit_doc.get('Question3Type',)
         form.question4type.data = edit_doc.get('Question4Type',)
         form.question5type.data = edit_doc.get('Question5Type',)
+        form.answer1anext.data = edit_doc.get('Answer1aNext',)
+        form.answer1bnext.data = edit_doc.get('Answer1bNext',)
+        form.answer1cnext.data = edit_doc.get('Answer1cNext',)
+        form.answer1dnext.data = edit_doc.get('Answer1dNext',)
+        form.answer2anext.data = edit_doc.get('Answer2aNext',)
+        form.answer2bnext.data = edit_doc.get('Answer2bNext',)
+        form.answer2cnext.data = edit_doc.get('Answer2cNext',)
+        form.answer2dnext.data = edit_doc.get('Answer2dNext',)
+        form.answer3anext.data = edit_doc.get('Answer3aNext',)
+        form.answer3bnext.data = edit_doc.get('Answer3bNext',)
+        form.answer3cnext.data = edit_doc.get('Answer3cNext',)
+        form.answer3dnext.data = edit_doc.get('Answer3dNext',)
     if form.validate_on_submit():
       data = {
           u'SurveyName': form.surveyname.data,
@@ -154,7 +178,19 @@ def edit():
           u'Question2Type': form.question2type.data,
           u'Question3Type': form.question3type.data,
           u'Question4Type': form.question4type.data,
-          u'Question5Type': form.question5type.data
+          u'Question5Type': form.question5type.data,
+          u'Answer1aNext': form.answer1anext.data,
+          u'Answer1bNext': form.answer1bnext.data,
+          u'Answer1cNext': form.answer1cnext.data,
+          u'Answer1dNext': form.answer1dnext.data,
+          u'Answer2aNext': form.answer2anext.data,
+          u'Answer2bNext': form.answer2bnext.data,
+          u'Answer2cNext': form.answer2cnext.data,
+          u'Answer2dNext': form.answer2dnext.data,
+          u'Answer3aNext': form.answer3anext.data,
+          u'Answer3bNext': form.answer3bnext.data,
+          u'Answer3cNext': form.answer3cnext.data,
+          u'Answer3dNext': form.answer3dnext.data
       }
       edit_doc = survey_collection.document(docref_id)
       edit_doc.update(data)

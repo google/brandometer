@@ -10,9 +10,8 @@
     <script>
         var fullConfiguration = {
             "survey_config": {
-                // TODO: Set receiver to match cloud function endpoint
-                "response_server": "https://[your_target url]/measure?type=survey&id={survey_id}&seg={seg}&response={responses}&visual={visual_responses}&creative_size={size}&randomtimestamp={random_timestamp}&bomid={bomid}&times={time_measurement}",
-                "id": "{{survey.id}}",
+                "response_server": "{{receiver_url}}?type=survey&id={survey_id}&seg={seg}&response={responses}&visual={visual_responses}&creative_size={size}&randomtimestamp={random_timestamp}&bomid={bomid}&times={time_measurement}",
+                "id": "{{survey_id}}",
                 // TODO: Create new creatives for each segment (e.g. demographics) of interest
                 "seg": "default",
                 // TODO: Update questions and options for each survey
@@ -522,13 +521,21 @@
                 insertPixel: function(url) {
                     var macroFilledUrl = this.fillMacrosInUrl(url);
 
-                    var pixelFrame = document.createElement('iframe');
-                    pixelFrame.setAttribute('width', '0');
-                    pixelFrame.setAttribute('height', '0');
-                    pixelFrame.setAttribute('src', macroFilledUrl);
-                    document.body.appendChild(pixelFrame);
+                    if (macroFilledUrl) {
+                        var pixelFrame = document.createElement('iframe');
+                        pixelFrame.setAttribute('width', '0');
+                        pixelFrame.setAttribute('height', '0');
+                        pixelFrame.setAttribute('src', macroFilledUrl);
+                        document.body.appendChild(pixelFrame);
 
-                    // console.log("fired: " + macroFilledUrl);
+                        if ("{{manual_responses}}" === "True") {
+                            var p = document.createElement('p');
+                            var cmd = "curl \"" + macroFilledUrl + "\"";
+                            cmd += " -H \"Authorization: bearer $(gcloud auth print-identity-token)\"";
+                            p.innerText = cmd;
+                            document.body.appendChild(p);
+                        }
+                    }
                 },
 
 

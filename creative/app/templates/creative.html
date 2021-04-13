@@ -764,7 +764,9 @@
             <span id="question_comment"></span><span id="next_button">Next</span>
         </div>
     </div>
-    <p> <a href="/index">Back</a> </p>
+    {% if show_back_button %}
+    <p><a href="/index">Back</a></p>
+    {% endif %}
     <script>
         runFSM();
     </script>

@@ -78,6 +78,7 @@ def preview_creative(survey_id):
         survey=survey,
         survey_id=survey_id,
         manual_responses=True,
+        show_back_button = True,
         all_question_json=get_question_json(survey))
   else:
     flash('Survey not found')
@@ -209,7 +210,11 @@ def download_zip(survey_id):
         doc_ref = survey_collection.document(survey_id)
         survey_doc = doc_ref.get()
         survey = survey_doc.to_dict()
-        survey_html = render_template('creative.html',survey=survey,survey_id=survey_id,all_question_json=get_question_json(survey))
+        survey_html = render_template('creative.html',
+                                      survey=survey,
+                                      survey_id=survey_id,
+                                      show_back_button = False,
+                                      all_question_json=get_question_json(survey))
         z.writestr("index.html", survey_html)
 
     data.seek(0)

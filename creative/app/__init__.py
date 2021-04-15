@@ -7,3 +7,5 @@ Bootstrap(app)
 
 from . import forms
 from . import routes
+from . import survey_collection
+from . import survey_service

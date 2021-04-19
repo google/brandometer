@@ -25,15 +25,15 @@
       {% for survey in all_surveys %}
       <tr>
         <td>{{ survey.id }}</td>
-        <td>{{ (survey.to_dict())['SurveyName'] }}</td>
+        <td>{{ (survey.to_dict())['surveyName'] }}</td>
         <td>{{ survey.to_dict() }}</td>
         <td>
           <table class="table">
-            <tr><td>{{ (survey.to_dict())['Question1'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['Answer1a'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['Answer1b'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['Answer1c'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['Answer1d'] }} </td></tr>
+            <tr><td>{{ (survey.to_dict())['question1'] }} </td></tr>
+            <tr><td>{{ (survey.to_dict())['answer1a'] }} </td></tr>
+            <tr><td>{{ (survey.to_dict())['answer1b'] }} </td></tr>
+            <tr><td>{{ (survey.to_dict())['answer1c'] }} </td></tr>
+            <tr><td>{{ (survey.to_dict())['answer1d'] }} </td></tr>
           </table>
         </td>
         <td>

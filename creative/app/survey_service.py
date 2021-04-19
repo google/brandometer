@@ -1,5 +1,8 @@
 from flask import render_template, flash
 from . import survey_collection
+import io
+import datetime
+import zipfile
 
 def get_all():
     return survey_collection.get_all()
@@ -14,128 +17,43 @@ def delete_by_id(id):
     return survey_collection.delete_by_id(id)
 
 def create(form):
-    data = {
-        u'Question1Type' : form.question1type.data,
-        u'Question2Type' : form.question2type.data,
-        u'Question3Type' : form.question3type.data,
-        u'Question4Type' : form.question4type.data,
-        u'Question5Type' : form.question5type.data,
-        u'SurveyName': form.surveyname.data,
-        u'Question1': form.question1.data,
-        u'Answer1a': form.answer1a.data,
-        u'Answer1b': form.answer1b.data,
-        u'Answer1c': form.answer1c.data,
-        u'Answer1d': form.answer1d.data,
-        u'Question2': form.question2.data,
-        u'Answer2a': form.answer2a.data,
-        u'Answer2b': form.answer2b.data,
-        u'Answer2c': form.answer2c.data,
-        u'Answer2d': form.answer2d.data,
-        u'Question3': form.question3.data,
-        u'Answer3a': form.answer3a.data,
-        u'Answer3b': form.answer3b.data,
-        u'Answer3c': form.answer3c.data,
-        u'Answer3d': form.answer3d.data,
-        u'Answer1aNext': form.answer1anext.data,
-        u'Answer1bNext': form.answer1bnext.data,
-        u'Answer1cNext': form.answer1cnext.data,
-        u'Answer1dNext': form.answer1dnext.data,
-        u'Answer2aNext': form.answer2anext.data,
-        u'Answer2bNext': form.answer2bnext.data,
-        u'Answer2cNext': form.answer2cnext.data,
-        u'Answer2dNext': form.answer2dnext.data,
-        u'Answer3aNext': form.answer3anext.data,
-        u'Answer3bNext': form.answer3bnext.data,
-        u'Answer3cNext': form.answer3cnext.data,
-        u'Answer3dNext': form.answer3dnext.data
-    }
-
-
-    # TODO search for ==> form to_dict
-    doc_ref = survey_collection.create(data)
-    flash(f"{form.surveyname.data} is created as {doc_ref.id}")
+    doc_ref = survey_collection.create(form.data)
+    flash(f"{form.surveyName.data} is created as {doc_ref.id}")
 
 def update_by_id(id, form):
-    data = {
-        u'SurveyName': form.surveyname.data,
-        u'Question1': form.question1.data,
-        u'Answer1a': form.answer1a.data,
-        u'Answer1b': form.answer1b.data,
-        u'Answer1c': form.answer1c.data,
-        u'Answer1d': form.answer1d.data,
-        u'Question2': form.question2.data,
-        u'Answer2a': form.answer2a.data,
-        u'Answer2b': form.answer2b.data,
-        u'Answer2c': form.answer2c.data,
-        u'Answer2d': form.answer2d.data,
-        u'Question3': form.question3.data,
-        u'Answer3a': form.answer3a.data,
-        u'Answer3b': form.answer3b.data,
-        u'Answer3c': form.answer3c.data,
-        u'Answer3d': form.answer3d.data,
-        u'Question1Type': form.question1type.data,
-        u'Question2Type': form.question2type.data,
-        u'Question3Type': form.question3type.data,
-        u'Question4Type': form.question4type.data,
-        u'Question5Type': form.question5type.data,
-        u'Answer1aNext': form.answer1anext.data,
-        u'Answer1bNext': form.answer1bnext.data,
-        u'Answer1cNext': form.answer1cnext.data,
-        u'Answer1dNext': form.answer1dnext.data,
-        u'Answer2aNext': form.answer2anext.data,
-        u'Answer2bNext': form.answer2bnext.data,
-        u'Answer2cNext': form.answer2cnext.data,
-        u'Answer2dNext': form.answer2dnext.data,
-        u'Answer3aNext': form.answer3anext.data,
-        u'Answer3bNext': form.answer3bnext.data,
-        u'Answer3cNext': form.answer3cnext.data,
-        u'Answer3dNext': form.answer3dnext.data
-    }
-    edit_doc = survey_collection.update_by_id(id, data)
+    edit_doc = survey_collection.update_by_id(id, form.data)
     flash(f"Survey with ID: {id} is edited")
 
 def set_form_data(form, edit_doc):
-    form.surveyname.data = edit_doc.get('SurveyName',)
-    form.question1.data = edit_doc.get('Question1',)
-    form.answer1a.data = edit_doc.get('Answer1a',)
-    form.answer1b.data = edit_doc.get('Answer1b',)
-    form.answer1c.data = edit_doc.get('Answer1c',)
-    form.answer1d.data = edit_doc.get('Answer1d',)
-    form.question2.data = edit_doc.get('Question2',)
-    form.answer2a.data = edit_doc.get('Answer2a',)
-    form.answer2b.data = edit_doc.get('Answer2b',)
-    form.answer2c.data = edit_doc.get('Answer2c',)
-    form.answer2d.data = edit_doc.get('Answer2d',)
-    form.question3.data = edit_doc.get('Question3',)
-    form.answer3a.data = edit_doc.get('Answer3a',)
-    form.answer3b.data = edit_doc.get('Answer3b',)
-    form.answer3c.data = edit_doc.get('Answer3c',)
-    form.answer3d.data = edit_doc.get('Answer3d',)
-    form.question1type.data = edit_doc.get('Question1Type',)
-    form.question2type.data = edit_doc.get('Question2Type',)
-    form.question3type.data = edit_doc.get('Question3Type',)
-    form.question4type.data = edit_doc.get('Question4Type',)
-    form.question5type.data = edit_doc.get('Question5Type',)
-    form.answer1anext.data = edit_doc.get('Answer1aNext',)
-    form.answer1bnext.data = edit_doc.get('Answer1bNext',)
-    form.answer1cnext.data = edit_doc.get('Answer1cNext',)
-    form.answer1dnext.data = edit_doc.get('Answer1dNext',)
-    form.answer2anext.data = edit_doc.get('Answer2aNext',)
-    form.answer2bnext.data = edit_doc.get('Answer2bNext',)
-    form.answer2cnext.data = edit_doc.get('Answer2cNext',)
-    form.answer2dnext.data = edit_doc.get('Answer2dNext',)
-    form.answer3anext.data = edit_doc.get('Answer3aNext',)
-    form.answer3bnext.data = edit_doc.get('Answer3bNext',)
-    form.answer3cnext.data = edit_doc.get('Answer3cNext',)
-    form.answer3dnext.data = edit_doc.get('Answer3dNext',)
+    edit_doc_dict = edit_doc.to_dict()
+    for key, value in edit_doc_dict.items():
+        form[key].data = edit_doc.get(key,)
+
+def zip_file(id):
+    data = io.BytesIO()
+    survey_doc = get_doc_by_id(id)
+    survey_dict = survey_doc.to_dict()
+    write_html_template(id, survey_dict, data)
+    data.seek(0)
+    filename = datetime.datetime.now().strftime("%Y%m%d")+'_'+survey_dict['surveyName']+'.zip'
+    return filename, data
+
+def write_html_template(id, survey_dict, data):
+    with zipfile.ZipFile(data, mode='w') as z:
+        survey_html = render_template('creative.html',
+                                  survey=survey_dict,
+                                  survey_id=id,
+                                  show_back_button = False,
+                                  all_question_json=get_question_json(survey_dict))
+        z.writestr("index.html", survey_html)
 
 def get_question_json(survey):
   all_question_json = []
   for i in range(1, 5):
-    question_text = survey.get('Question' + str(i), '')
+    question_text = survey.get('question' + str(i), '')
     options = []
     next_question = {}
-    question_type = survey.get('Question' + str(i) + 'Type')
+    question_type = survey.get('question' + str(i) + 'Type')
     if question_text:
       question = {
           'id': i,
@@ -145,7 +63,7 @@ def get_question_json(survey):
           'next_question': next_question
       }
       for j in ['a', 'b', 'c', 'd']:
-        answer_text = survey.get('Answer' + str(i) + j, '')
+        answer_text = survey.get('answer' + str(i) + j, '')
         if answer_text:
           answer_id = j.capitalize()
           options.append({
@@ -153,7 +71,6 @@ def get_question_json(survey):
               'role': 'option',
               'text': answer_text
           })
-          next_question[answer_id] = survey.get('Answer' + str(i) + j + 'Next','')
+          next_question[answer_id] = survey.get('answer' + str(i) + j + 'Next','')
       all_question_json.append(question)
-
   return all_question_json

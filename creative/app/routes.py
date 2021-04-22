@@ -30,7 +30,8 @@ def preview(survey_id):
       survey_id=survey_id,
       manual_responses=True,
       show_back_button = True,
-      all_question_json=survey_service.get_question_json(survey_info))
+      all_question_json=survey_service.get_question_json(survey_info),
+      seg='default')
   else:
     flash('Survey not found')
     return redirect(url_for('index'))

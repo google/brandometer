@@ -13,7 +13,7 @@
                 "response_server": "{{receiver_url}}?type=survey&id={survey_id}&seg={seg}&response={responses}&visual={visual_responses}&creative_size={size}&randomtimestamp={random_timestamp}&bomid={bomid}&times={time_measurement}",
                 "id": "{{survey_id}}",
                 // TODO: Create new creatives for each segment (e.g. demographics) of interest
-                "seg": "default",
+                "seg": "{{seg}}",
                 // TODO: Update questions and options for each survey
                 "questions": {{all_question_json|tojson}},
                 // TODO: capture an exit url

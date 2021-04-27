@@ -42,6 +42,7 @@
             <a href="{{ url_for('preview', survey_id=survey.id) }}"><button type="button">Preview</button></a><br>
             <a href="{{ url_for('delete', survey_id=survey.id) }}"><button type="button">Delete</button></a><br>
             <a href="{{ url_for('edit', survey_id=survey.id) }}"><button type="button">Edit</button></a>
+            <a href="{{ url_for('download_results', survey_id=survey.id) }}"><button type="button">Results</button></a>
           </form>
         </td>
       </tr>

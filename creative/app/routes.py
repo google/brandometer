@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, url_for, jsonify, send_file
+from flask import render_template, request, flash, redirect, url_for, jsonify, send_file, Response
 from .forms import QuestionForm
 from . import survey_collection
 from . import survey_service
@@ -64,6 +64,16 @@ def download_zip(survey_id):
         mimetype='application/zip',
         as_attachment=True,
         attachment_filename=filename)
+
+@app.route('/survey/download_results/<string:survey_id>',methods=['GET'])
+def download_results(survey_id):
+  if request.method=="GET":
+    csv = survey_service.download_results(survey_id)
+    return Response(
+          csv,
+          mimetype="text/csv",
+          headers={"Content-disposition":
+                  "attachment; filename=surveydata.csv"})
 
 @app.context_processor
 def inject_receiver_params():

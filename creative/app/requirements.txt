@@ -2,3 +2,7 @@ Flask==1.1.2
 Flask-WTF==0.14.3
 google-cloud-firestore==2.0.2
 Flask-Bootstrap==3.3.7.1
+google-cloud-bigquery==2.14.0
+google-cloud-bigquery-storage==2.4.0
+pandas==1.2.4
+ipython==7.22.0

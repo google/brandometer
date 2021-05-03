@@ -30,7 +30,7 @@ you can verify pip installation by `pip --version`, you should be able to see pi
 
 1. After cloning this project, open cmd and change directory path to your project
 
-```cd ~/path/to/brandmeter```
+```cd ~/path/to/brandometer```
 
 2. if you doesn't have virtual environment for this project yet. Create a new one and run the virtual environment. 
 
@@ -52,6 +52,16 @@ then run the project by `flask run`
 
 for MacOS, use the following command to run the project
 
-```FLASK_APP=path/to/creative/app FLASK_ENV=development flask run```
+```python main.py```
 
-the project will be available on http://127.0.0.1:5000/index
+the project will be available on http://127.0.0.1:5000
+
+## Deploy the project
+
+```cd ~/path/to/brandometer```
+
+1. Create a GCP project with billing enabled. Make note of the project id.
+
+2. ```./deploy [project-id] [bigquery-location] [compute-region]```
+
+If the deploy fails with an error, wait 5 minutes and try again. Sometimes a new project takes a little while to set up.

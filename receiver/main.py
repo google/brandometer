@@ -13,6 +13,7 @@
 
 import logging
 import datetime
+import os
 
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
@@ -24,7 +25,7 @@ def receiver(request):
   params.update(request.args or {})
 
   client = bigquery.Client()
-  table_id = "jerraldwee-testing.jerraldwee_test.responses"
+  table_id = os.environ.get("TABLE_ID")
 
   try:
     client.get_table(table_id)  # Make an API request.

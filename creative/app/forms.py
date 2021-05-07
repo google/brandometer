@@ -13,6 +13,7 @@ class QuestionForm(FlaskForm):
     question3Type = SelectField('question3Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
     question4Type = SelectField('question4Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
     question5Type = SelectField('question5Type', choices=('SINGLE_OPTION','MULTIPLE_OPTION'))
+    language = SelectField('language', choices=('en','ms','zh','ja','ko')) 
     surveyName = StringField('surveyName',validators=[DataRequired()])
     question1 = StringField('question1',validators=[DataRequired()])
     answer1a = StringField('answer1a', validators=[DataRequired()])

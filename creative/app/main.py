@@ -47,7 +47,10 @@ def preview(survey_id):
         manual_responses=True,
         show_back_button=True,
         all_question_json=survey_service.get_question_json(survey_info),
-        seg='default')
+        seg='default',
+        thankyou_text=survey_service.get_thank_you_text(survey_info),
+        next_text=survey_service.get_next_text(survey_info),
+        comment_text=survey_service.get_comment_text(survey_info))
   else:
     flash('Survey not found')
     return redirect(url_for('index'))

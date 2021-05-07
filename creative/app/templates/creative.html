@@ -19,7 +19,6 @@
                 // TODO: capture an exit url
                 "exit_url": "https://www.google.com",
                 "carousel_images": [],
-                "thankyou_text": "Thank You",
                 "trackers": [
                     ""
                 ]
@@ -34,11 +33,11 @@
                 "component_selectors": {
                     "next_button": {
                         "container": "next_button",
-                        "text": "Next"
+                        "text": "{{next_text}}"
                     },
                     "thankyou": {
                         "container": "thankyou_container",
-                        "text": "thankyou_text"
+                        "text": "{{thankyou_text}}"
                     },
                     "survey": {
                         "container": "survey_container",
@@ -57,7 +56,7 @@
                     },
                     "comment": {
                         "container": "question_comment",
-                        "text": "Choose all applicable"
+                        "text": "{{comment_text}}"
                     }
                 }
             }
@@ -412,8 +411,8 @@
                         .getElementById(this.uiConfig.component_selectors.thankyou.container)
                         .setAttribute('class', 'thankyoucontainer');
 
-                    document.getElementById(this.uiConfig.component_selectors.thankyou.text)
-                        .innerHTML = this.surveyConfig.thankyou_text;
+                    document.getElementById(this.uiConfig.component_selectors.thankyou.container)
+                        .innerHTML = this.uiConfig.component_selectors.thankyou.text;
 
 
                     // console.log(this.surveyConfig.thankyou_text);

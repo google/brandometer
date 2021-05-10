@@ -40,7 +40,15 @@ you can verify pip installation by `pip --version`, you should be able to see pi
 
 ```pip install -r creative/app/requirements.txt```
 
-4. run the project
+4. setup project with gcloud
+
+run command: `gcloud auth login` it will popup a new login page to authorize your account
+
+after login setup the project config to your working PROJECT_ID 
+
+```gcloud config set project $YOUR_PROJECT_ID```
+
+5. run the project
 
 for Windows, use the following command to setup project environment
 
@@ -65,3 +73,37 @@ the project will be available on http://127.0.0.1:5000
 2. ```./deploy [project-id] [bigquery-location] [compute-region]```
 
 If the deploy fails with an error, wait 5 minutes and try again. Sometimes a new project takes a little while to set up.
+
+## Run Unit Test
+
+1. login to gcloud with application-default login by command:
+
+
+```gcloud auth application-default login```
+
+this commandline will help SDK to automatically find the credentials to authenticate with Google Cloud
+
+2. change the working directory to brandometer/creative/app
+
+```cd ~/path/to/brandometer/creative/app```
+
+3. run pytest with the following command
+
+```PYTHONPATH=. pytest```
+
+pytest will scan files in the project that has prefix with `test_` (for example, `test_foo_bar.py`) and run the existing unit test inside
+
+example output (all test passed)
+
+```
+===================== test session starts =============================
+platform darwin -- Python 3.8.2, pytest-6.2.3, py-1.10.0, pluggy-0.13.1
+rootdir: /Users/xxx/gground/brandometer/creative/app
+collected 5 items                                                                                                                                          
+
+test/test_survey_service.py .....                                [100%]
+
+========================== 5 passed in 1.52s ===========================
+```
+
+More information about pytest [here](https://docs.pytest.org/en/6.2.x/index.html)

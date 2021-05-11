@@ -162,42 +162,44 @@ def download_results(id):
   csv = outputdf.to_csv()
   return csv
 
+
 def get_thank_you_text(survey):
-  if survey.get('language') == "ms":
-    thankyou_text = "Terima Kasih"
-  elif survey.get('language') == "zh":
-    thankyou_text = "谢谢"
-  elif survey.get('language') == "ja":
-    thankyou_text = "ありがとうございました"
-  elif survey.get('language') == "ko":
-    thankyou_text = "고맙습니다"
+  if survey.get('language') == 'ms':
+    thankyou_text = 'Terima Kasih'
+  elif survey.get('language') == 'zh':
+    thankyou_text = '谢谢'
+  elif survey.get('language') == 'ja':
+    thankyou_text = 'ありがとうございました'
+  elif survey.get('language') == 'ko':
+    thankyou_text = '고맙습니다'
   else:
-    thankyou_text = "Thank You"
+    thankyou_text = 'Thank You'
   return thankyou_text
 
+
 def get_next_text(survey):
-  if survey.get('language') == "ms":
-    next_text = "Next"
-  elif survey.get('language') == "zh":
-    next_text = "下一个"
-  elif survey.get('language') == "ja":
-    next_text = "次へ"
-  elif survey.get('language') == "ko":
-    next_text = "다음에"
+  if survey.get('language') == 'ms':
+    next_text = 'Next'
+  elif survey.get('language') == 'zh':
+    next_text = '下一个'
+  elif survey.get('language') == 'ja':
+    next_text = '次へ'
+  elif survey.get('language') == 'ko':
+    next_text = '다음에'
   else:
-    next_text = "Next"
+    next_text = 'Next'
   return next_text
 
-def get_comment_text(survey):
-  if survey.get('language') == "ms":
-    comment_text = "Pilih semua yang berkenaan"
-  elif survey.get('language') == "zh":
-    comment_text = "选择所有适用的"
-  elif survey.get('language') == "ja":
-    comment_text = "当てはまるもの全て選択"
-  elif survey.get('language') == "ko":
-    comment_text = "적용 가능한 모든 항목을 선택하십시오"
-  else:
-    comment_text = "Choose all applicable"
-  return comment_text
 
+def get_comment_text(survey):
+  if survey.get('language') == 'ms':
+    comment_text = 'Pilih semua yang berkenaan'
+  elif survey.get('language') == 'zh':
+    comment_text = '选择所有适用的'
+  elif survey.get('language') == 'ja':
+    comment_text = '当てはまるもの全て選択'
+  elif survey.get('language') == 'ko':
+    comment_text = '적용 가능한 모든 항목을 선택하십시오'
+  else:
+    comment_text = 'Choose all applicable'
+  return comment_text

@@ -1,38 +1,41 @@
-from flask import render_template, flash, Response
-import survey_collection
-import io
+"""Various imports to be used for survey functionalites."""
 import datetime
-import zipfile
+import io
 import os
-from google.cloud import bigquery, bigquery_storage
-import pandas as pd
+import zipfile
+from flask import flash
+from flask import render_template
+from google.cloud import bigquery
+from google.cloud import bigquery_storage
 import google.cloud.bigquery.magics
+import pandas as pd
+import survey_collection
 
 
 def get_all():
   return survey_collection.get_all()
 
 
-def get_doc_by_id(id):
-  return survey_collection.get_doc_by_id(id)
+def get_doc_by_id(survey_id):
+  return survey_collection.get_doc_by_id(survey_id)
 
 
-def get_by_id(id):
-  return survey_collection.get_by_id(id)
+def get_by_id(survey_id):
+  return survey_collection.get_by_id(survey_id)
 
 
-def delete_by_id(id):
-  return survey_collection.delete_by_id(id)
+def delete_by_id(survey_id):
+  return survey_collection.delete_by_id(survey_id)
 
 
 def create(form):
   doc_ref = survey_collection.create(form.data)
-  flash(f'{form.surveyName.data} is created as {doc_ref.id}')
+  flash(f'{form.surveyname.data} is created as {doc_ref.id}')
 
 
-def update_by_id(id, form):
-  edit_doc = survey_collection.update_by_id(id, form.data)
-  flash(f'Survey with ID: {id} is edited')
+def update_by_id(survey_id, form):
+  edit_doc = survey_collection.update_by_id(survey_id, form.data)
+  flash(f'Survey with ID: {edit_doc.id} is edited')
 
 
 def set_form_data(form, edit_doc):
@@ -42,18 +45,20 @@ def set_form_data(form, edit_doc):
     form[key].data = edit_doc.get(key,)
 
 
-def zip_file(id):
-  # TODO Make these use temp files in '/tmp/' to work around App Engine read only filesystem
-  # prepare data
-  survey_doc = get_doc_by_id(id)
+def zip_file(survey_id):
+  """File download function."""
+  # Make these use temp files in '/tmp/' to work around
+  # App Engine read only filesystem
+  # Prepare data
+  survey_doc = get_doc_by_id(survey_id)
   survey_dict = survey_doc.to_dict()
   current_datetime = datetime.datetime.now().strftime('%Y%m%d')
-  surveyName = survey_dict['surveyName'].replace(' ', '-')
-  prefix_filename = current_datetime + '_' + surveyName
+  surveyname = survey_dict['surveyname'].replace(' ', '-')
+  prefix_filename = current_datetime + '_' + surveyname
   seg_types = ['default_control', 'default_expose']
 
   # create zip
-  write_html_template(id, survey_dict, prefix_filename, seg_types)
+  write_html_template(survey_dict, prefix_filename, seg_types)
   zip_dir(prefix_filename, seg_types)
 
   # make data response
@@ -70,7 +75,7 @@ def zip_dir(filename, seg_types):
     zipdir.write(filename + '_' + seg_type + '.zip')
 
 
-def write_html_template(id, survey_dict, prefix_filename, seg_types):
+def write_html_template(survey_dict, prefix_filename, seg_types):
 
   for seg_type in seg_types:
     dir_name = prefix_filename + '_' + seg_type
@@ -101,12 +106,13 @@ def delete_tmp_zip_files(filename, seg_types):
 
 
 def get_question_json(survey):
+  """Retrieving questions from survey in JSON format."""
   all_question_json = []
   for i in range(1, 5):
     question_text = survey.get('question' + str(i), '')
     options = []
     next_question = {}
-    question_type = survey.get('question' + str(i) + 'Type')
+    question_type = survey.get('question' + str(i) + 'type')
     if question_text:
       question = {
           'id': i,
@@ -120,29 +126,30 @@ def get_question_json(survey):
       if answer_text:
         answer_id = j.capitalize()
         options.append({'id': answer_id, 'role': 'option', 'text': answer_text})
-      next_question[answer_id] = survey.get('answer' + str(i) + j + 'Next', '')
+      next_question[answer_id] = survey.get('answer' + str(i) + j + 'next', '')
     all_question_json.append(question)
   return all_question_json
 
 
-def download_results(id):
+def download_results(surveyid):
+  """Download survey results in a CSV format file."""
   google.cloud.bigquery.magics.context.use_bqstorage_api = True
   project_id = os.environ.get('PROJECT_ID')
   table_id = os.environ.get('TABLE_ID')
   client = bigquery.Client(project=project_id)
   bqstorageclient = bigquery_storage.BigQueryReadClient()
-  QUERY = f"""
+  query = f"""
         SELECT *
         FROM `{table_id}`
         WHERE ID = @survey_id
         LIMIT 1000
     """
   job_config = bigquery.QueryJobConfig(query_parameters=[
-      bigquery.ScalarQueryParameter('survey_id', 'STRING', id),
+      bigquery.ScalarQueryParameter('survey_id', 'STRING', surveyid),
   ])
-  query_job = client.query(QUERY, job_config=job_config)
+  query_job = client.query(query, job_config=job_config)
   df = query_job.result().to_dataframe(bqstorage_client=bqstorageclient)
-  df = df[df['ID'] == id]
+  df = df[df['ID'] == surveyid]
   output = {'Date': [], 'Control/Expose': [], 'Dimension 2': []}
   outputdf = pd.DataFrame(data=output)
   outputdf['Date'] = df['CreatedAt'].values
@@ -164,6 +171,7 @@ def download_results(id):
 
 
 def get_thank_you_text(survey):
+  """Multi-language support input for thank you text."""
   if survey.get('language') == 'ms':
     thankyou_text = 'Terima Kasih'
   elif survey.get('language') == 'zh':
@@ -178,6 +186,7 @@ def get_thank_you_text(survey):
 
 
 def get_next_text(survey):
+  """Multi-language support input for next text."""
   if survey.get('language') == 'ms':
     next_text = 'Next'
   elif survey.get('language') == 'zh':
@@ -192,6 +201,7 @@ def get_next_text(survey):
 
 
 def get_comment_text(survey):
+  """Multi-language support input for comment text."""
   if survey.get('language') == 'ms':
     comment_text = 'Pilih semua yang berkenaan'
   elif survey.get('language') == 'zh':

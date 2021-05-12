@@ -1,8 +1,11 @@
-from unittest import TestCase
-from unittest.mock import Mock, call, patch
+"""Import relevant packages/libraries."""
 import os
-import survey_service
 import survey_collection
+import survey_service
+from unittest import TestCase
+from unittest.mock import Mock
+from unittest.mock import call
+from unittest.mock import patch
 
 
 class TestSurveyService(TestCase):
@@ -39,25 +42,25 @@ class TestSurveyService(TestCase):
     # then
     survey_collection.delete_by_id.assert_called_once_with('mockSurveyId')
 
-  #TODO
+  # TODO
   #def test_create(self):
 
-  #TODO
+  # TODO
   #def test_update_by_id(self):
 
-  #TODO
+  # TODO
   #def test_set_form_data(self):
 
-  #TODO
+  # TODO
   #def test_zip_file(self):
 
-  #TODO
+  # TODO
   #def test_zip_dir(self):
 
-  #TODO
+  # TODO
   #def test_write_html_template(self):
 
-  #TODO
+  # TODO
   #def test_get_html_template(self):
 
   def test_delete_tmp_zip_files(self):
@@ -78,8 +81,8 @@ class TestSurveyService(TestCase):
     os.remove.assert_has_calls(expected_calls)
     assert os.remove.call_count == 3
 
-  #TODO
+  # TODO
   #def test_get_question_json(self):
 
-  #TODO
+  # TODO
   #def download_results(self):

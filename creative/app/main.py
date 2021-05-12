@@ -1,13 +1,16 @@
-import datetime
-
-from flask import Flask
-from flask import render_template, request, flash, redirect, url_for, jsonify, send_file, Response
-import pathlib
+"""Import of required packages/libraries."""
 import os
+from flask import flash
+from flask import Flask
+from flask import redirect
+from flask import render_template
+from flask import request
+from flask import Response
+from flask import send_file
+from flask import url_for
 from flask_bootstrap import Bootstrap
 
 import forms
-import survey_collection
 import survey_service
 
 app = Flask(__name__)
@@ -28,6 +31,7 @@ def index():
 
 @app.route('/survey/create', methods=['GET', 'POST'])
 def create():
+  """Survey creation."""
   form = forms.QuestionForm()
   if form.validate_on_submit():
     survey_service.create(form)
@@ -37,6 +41,7 @@ def create():
 
 @app.route('/survey/preview/<string:survey_id>', methods=['GET'])
 def preview(survey_id):
+  """Survey preview."""
   survey_doc = survey_service.get_doc_by_id(survey_id)
   if survey_doc.exists:
     survey_info = survey_doc.to_dict()
@@ -58,6 +63,7 @@ def preview(survey_id):
 
 @app.route('/survey/delete', methods=['GET', 'DELETE'])
 def delete():
+  """Delete survey."""
   if request.method == 'GET':
     docref_id = request.args.get('survey_id')
     survey_service.delete_by_id(docref_id)
@@ -67,6 +73,7 @@ def delete():
 
 @app.route('/survey/edit', methods=['POST', 'PUT', 'GET'])
 def edit():
+  """Edit Survey."""
   form = forms.QuestionForm()
   docref_id = request.args.get('survey_id')
   edit_doc = survey_service.get_doc_by_id(docref_id)
@@ -80,6 +87,7 @@ def edit():
 
 @app.route('/survey/download_zip/<string:survey_id>', methods=['GET'])
 def download_zip(survey_id):
+  """Survey preview."""
   filename, data = survey_service.zip_file(survey_id)
   return send_file(
       data,
@@ -90,6 +98,7 @@ def download_zip(survey_id):
 
 @app.route('/survey/download_results/<string:survey_id>', methods=['GET'])
 def download_results(survey_id):
+  """Download survey results."""
   if request.method == 'GET':
     csv = survey_service.download_results(survey_id)
     return Response(

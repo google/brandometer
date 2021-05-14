@@ -9,7 +9,6 @@ from flask import Response
 from flask import send_file
 from flask import url_for
 from flask_bootstrap import Bootstrap
-
 import forms
 import survey_service
 

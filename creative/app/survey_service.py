@@ -108,7 +108,7 @@ def delete_tmp_zip_files(filename, seg_types):
 def get_question_json(survey):
   """Retrieving questions from survey in JSON format."""
   all_question_json = []
-  for i in range(1, 5):
+  for i in range(1, 6):
     question_text = survey.get('question' + str(i), '')
     options = []
     next_question = {}

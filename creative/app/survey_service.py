@@ -49,6 +49,7 @@ def zip_file(survey_id):
   """File download function."""
   # Make these use temp files in '/tmp/' to work around
   # App Engine read only filesystem
+
   # Prepare data
   survey_doc = get_doc_by_id(survey_id)
   survey_dict = survey_doc.to_dict()
@@ -58,39 +59,48 @@ def zip_file(survey_id):
   seg_types = ['default_control', 'default_expose']
 
   # create zip
-  write_html_template(survey_dict, prefix_filename, seg_types)
-  zip_dir(prefix_filename, seg_types)
+  template_zips = write_html_template(survey_id, survey_dict, prefix_filename,
+                                      seg_types)
+  combined_zip = zip_dir(prefix_filename, template_zips)
 
   # make data response
-  filename = prefix_filename + '.zip'
-  with open(filename, 'rb') as file:
+  with open(combined_zip.filename, 'rb') as file:
     file_data = io.BytesIO(file.read())
-  delete_tmp_zip_files(prefix_filename, seg_types)
-  return filename, file_data
+
+  # clean up tmp files
+  delete_tmp_zip_files([combined_zip] + template_zips)
+
+  return os.path.basename(combined_zip.filename), file_data
 
 
-def zip_dir(filename, seg_types):
-  zipdir = zipfile.ZipFile(filename + '.zip', 'w', zipfile.ZIP_DEFLATED)
+def zip_dir(filename, template_zips):
+  with zipfile.ZipFile('/tmp/' + filename + '.zip', 'w',
+                       zipfile.ZIP_DEFLATED) as zipdir:
+    for zip in template_zips:
+      zipdir.write(zip.filename)
+  return zipdir
+
+
+def write_html_template(survey_id, survey_dict, prefix_filename, seg_types):
+  template_zips = []
+
   for seg_type in seg_types:
-    zipdir.write(filename + '_' + seg_type + '.zip')
-
-
-def write_html_template(survey_dict, prefix_filename, seg_types):
-
-  for seg_type in seg_types:
-    dir_name = prefix_filename + '_' + seg_type
+    dir_name = '/tmp/' + prefix_filename + '_' + seg_type
     # write html file
-    zip_write_file = zipfile.ZipFile(dir_name + '.zip', 'w',
-                                     zipfile.ZIP_DEFLATED)
-    zip_write_file.writestr('index.html',
-                            get_html_template(survey_dict, seg_type))
+    with zipfile.ZipFile(dir_name + '.zip', 'w',
+                         zipfile.ZIP_DEFLATED) as zip_write_file:
+      zip_write_file.writestr(
+          'index.html', get_html_template(survey_id, survey_dict, seg_type))
+      template_zips.append(zip_write_file)
+
+  return template_zips
 
 
-def get_html_template(survey_dict, seg_type):
+def get_html_template(survey_id, survey_dict, seg_type):
   return render_template(
       'creative.html',
       survey=survey_dict,
-      survey_id=id,
+      survey_id=survey_id,
       show_back_button=False,
       all_question_json=get_question_json(survey_dict),
       seg=seg_type,
@@ -99,10 +109,9 @@ def get_html_template(survey_dict, seg_type):
       comment_text=get_comment_text(survey_dict))
 
 
-def delete_tmp_zip_files(filename, seg_types):
-  for seg_type in seg_types:
-    os.remove(filename + '_' + seg_type + '.zip')
-  os.remove(filename + '.zip')
+def delete_tmp_zip_files(zipfiles):
+  for zipfile in zipfiles:
+    os.remove(zipfile.filename)
 
 
 def get_question_json(survey):

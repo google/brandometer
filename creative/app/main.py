@@ -1,4 +1,6 @@
 """Import of required packages/libraries."""
+
+import datetime
 import os
 from flask import flash
 from flask import Flask
@@ -91,6 +93,9 @@ def download_zip(survey_id):
   return send_file(
       data,
       mimetype='application/zip',
+      add_etags=False,
+      cache_timeout=0,
+      last_modified=datetime.datetime.now(),
       as_attachment=True,
       attachment_filename=filename)
 

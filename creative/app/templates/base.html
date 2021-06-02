@@ -21,6 +21,15 @@
         <li><a href="{{ url_for('create') }}">Create Survey</a></li>
       </ul>
     </div>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success" role="alert">
+      <p>Action Detected: {{ message }}</p>
+    </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
   </div>
 </nav>
 {% endblock %}

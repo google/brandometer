@@ -1,16 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <body>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-success" role="alert">
-    <p>Action Detected: {{ message }}</p>
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-  <div class="table-responsive-sm">
+  <div class="table-responsive-sm" style="height:500px;overflow:auto;">
     <table class="table table-bordered">
       <caption style="text-align:center">List Of Surveys</caption>
       <thead class="thead-light">
@@ -52,3 +43,4 @@
 </body>
 
 {% endblock content %}
+

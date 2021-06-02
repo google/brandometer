@@ -10,6 +10,7 @@ from flask import request
 from flask import Response
 from flask import send_file
 from flask import url_for
+from flask_basicauth import BasicAuth
 from flask_bootstrap import Bootstrap
 import forms
 import survey_service
@@ -17,6 +18,10 @@ import survey_service
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 Bootstrap(app)
+app.config['BASIC_AUTH_USERNAME'] = os.environ.get('AUTH_USERNAME')
+app.config['BASIC_AUTH_PASSWORD'] = os.environ.get('AUTH_PASSWORD')
+basic_auth = BasicAuth(app)
+app.config['BASIC_AUTH_FORCE'] = True
 
 
 @app.route('/')

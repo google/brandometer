@@ -63,8 +63,14 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud iam service-accounts keys create ./$PROJECT_ID-credentials.json \
     --iam-account=$PROJECT_ID@appspot.gserviceaccount.com
 
+# Setting authentication login services
+echo -e "\n-- Set your authentication login credentials"
+read -p 'Username: ' AUTH_USERNAME
+read -sp 'Password: ' AUTH_PASSWORD
+echo -e "\n-- Thank you, the authentication credentials has been set as $AUTH_USERNAME & $AUTH_PASSWORD"
+
 echo -e "\n-- Set up app engine config"
-sed -e "s/{{LOCATION}}/$LOCATION/" -e "s/{{PROJECT_ID}}/$PROJECT_ID/" creative/app/app.yaml.template >./creative/app/$PROJECT_ID.yaml
+sed -e "s/{{LOCATION}}/$LOCATION/" -e "s/{{PROJECT_ID}}/$PROJECT_ID/" -e "s/{{AUTH_USERNAME}}/$AUTH_USERNAME/" -e "s/{{AUTH_PASSWORD}}/$AUTH_PASSWORD/" creative/app/app.yaml.template >./creative/app/$PROJECT_ID.yaml
 
 echo -e "\n-- Deploy app engine"
 cd creative/app

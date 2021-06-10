@@ -3,11 +3,44 @@
 It would capture the input of the customers and create a survey based on user
 input.
 """
+import re
 from flask_wtf import FlaskForm
 from wtforms import SelectField
 from wtforms import StringField
 from wtforms import SubmitField
 from wtforms.validators import DataRequired
+from wtforms.validators import ValidationError
+
+
+def question_section_is_empty(form, questionNumber):
+  """Check if any field of the question input including answer is empty."""
+  questionField = 'question' + questionNumber
+  answerAField = 'answer' + questionNumber + 'a'
+  answerBField = 'answer' + questionNumber + 'b'
+  answerCField = 'answer' + questionNumber + 'c'
+  answerDField = 'answer' + questionNumber + 'd'
+  return not (form.data[questionField] and form.data[answerAField] and
+              form.data[answerBField] and form.data[answerCField] and
+              form.data[answerDField] and form.data[answerAField + 'next'] and
+              form.data[answerBField + 'next'] and
+              form.data[answerCField + 'next'] and
+              form.data[answerDField + 'next'])
+
+
+def validate_next_question(form, field):
+  """Validate if the question is linked by any other question's answer."""
+  questionNumberMatch = re.search('\d', field.name)
+  questionNumber = questionNumberMatch.group()
+  print('validating for question: ' + questionNumber)
+  for questionIndex in range(1, 6):
+    for answerChoice in ['a', 'b', 'c', 'd']:
+      answerFieldName = 'answer' + str(questionIndex) + answerChoice + 'next'
+      answerLinkData = form.data[answerFieldName]
+      if answerLinkData == questionNumber and question_section_is_empty(
+          form, questionNumber):
+        raise ValidationError(
+            'Answer ' + answerChoice + ' from question ' + str(questionIndex) +
+            ' linked to this question, please fill in this section')
 
 
 class QuestionForm(FlaskForm):
@@ -74,3 +107,18 @@ class QuestionForm(FlaskForm):
   answer5c = StringField('answer5c')
   answer5d = StringField('answer5d')
   submit = SubmitField('Submit')
+
+  def validate_question1(form, field):
+    validate_next_question(form, field)
+
+  def validate_question2(form, field):
+    validate_next_question(form, field)
+
+  def validate_question3(form, field):
+    validate_next_question(form, field)
+
+  def validate_question4(form, field):
+    validate_next_question(form, field)
+
+  def validate_question5(form, field):
+    validate_next_question(form, field)

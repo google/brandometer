@@ -43,12 +43,12 @@ def delete_by_id(survey_id):
 
 def create(form):
   doc_ref = survey_collection.create(form.data)
-  flash(f'{form.surveyname.data} is created as {doc_ref.id}')
+  flash(f'{form.surveyname.data} created as {doc_ref.id}')
 
 
 def update_by_id(survey_id, form):
   edit_doc = survey_collection.update_by_id(survey_id, form.data)
-  flash(f'Survey with ID: {edit_doc.id} is edited')
+  flash(f'{form.surveyname.data} updated')
 
 
 def set_form_data(form, edit_doc):
@@ -125,6 +125,15 @@ def get_html_template(survey_id, survey_dict, seg_type):
 def delete_tmp_zip_files(zipfiles):
   for zipfile in zipfiles:
     os.remove(zipfile.filename)
+
+
+def get_all_question_text(survey):
+  all_question_text = []
+  for i in range(1, 6):
+    question_text = survey.get('question' + str(i), '')
+    if question_text:
+      all_question_text.append(question_text)
+  return all_question_text
 
 
 def get_question_json(survey):

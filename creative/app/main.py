@@ -87,7 +87,7 @@ def delete():
   if request.method == 'GET':
     docref_id = request.args.get('survey_id')
     survey_service.delete_by_id(docref_id)
-    flash(f'Survey with ID: {docref_id} is deleted')
+    flash(f'Survey \'{docref_id}\' deleted')
   return redirect(url_for('index'))
 
 
@@ -139,6 +139,11 @@ def inject_receiver_params():
               'https://us-central1-jerraldwee-testing.cloudfunctions.net/receiver'
           )
   }
+
+
+@app.template_filter('get_all_question_text')
+def get_all_question_text(survey):
+  return survey_service.get_all_question_text(survey.to_dict())
 
 
 if __name__ == '__main__':

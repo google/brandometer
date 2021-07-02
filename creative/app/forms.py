@@ -52,7 +52,8 @@ def validate_next_question(form, field):
       if answerLinkData == questionNumber and question_section_is_empty(
           form, questionNumber):
         raise ValidationError(
-            'Answer ' + answerChoice + ' from question ' + str(questionIndex) +
+            'Answer ' + answerChoice.upper() + ' from question ' +
+            str(questionIndex) +
             ' linked to this question, please fill in this section')
 
 

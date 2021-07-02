@@ -1,46 +1,52 @@
 {% extends "base.html" %} {% block content %}
 
-<body>
-  <div class="table-responsive-sm" style="height:500px;overflow:auto;">
-    <table class="table table-bordered">
-      <caption style="text-align:center">List Of Surveys</caption>
-      <thead class="thead-light">
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Questions</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        {% for survey in all_surveys %}
         <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">JSON</th>
-          <th scope="col">Info</th>
-          <th scope="col">Action</th>
+            <td>{{ (survey.to_dict())['surveyname'] }}</td>
+            <td>
+                <table class="table">
+                    <ol>
+                        {% for question_text in survey | get_all_question_text %}
+                        <li>{{ question_text }}</li>
+                        {% endfor %}
+                    </ol>
+                </table>
+            </td>
+            <td>
+                <form>
+                    <a href="{{ url_for('edit', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-primary">Edit</button>
+                    </a>
+                    &nbsp;
+                    <a href="{{ url_for('preview', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-success">Preview</button>
+                    </a>
+                    &nbsp;
+                    <a href="{{ url_for('download_zip', survey_id=survey.id) }}">
+                        <button type="button" class="btn">Download</button>
+                    </a>
+                    &nbsp;
+                    <a href="{{ url_for('download_results', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-info">Results</button>
+                    </a>
+                    &nbsp;
+                    <a href="{{ url_for('delete', survey_id=survey.id) }}" onclick="return confirm('Really delete?')">
+                        <button type="button" class="btn btn-danger">Delete</button>
+                    </a>
+                </form>
+            </td>
         </tr>
-      </thead>
-      {% for survey in all_surveys %}
-      <tr>
-        <td>{{ survey.id }}</td>
-        <td>{{ (survey.to_dict())['surveyname'] }}</td>
-        <td>{{ survey.to_dict() }}</td>
-        <td>
-          <table class="table">
-            <tr><td>{{ (survey.to_dict())['question1'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['answer1a'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['answer1b'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['answer1c'] }} </td></tr>
-            <tr><td>{{ (survey.to_dict())['answer1d'] }} </td></tr>
-          </table>
-        </td>
-        <td>
-          <form>
-            <a href="{{ url_for('download_zip', survey_id=survey.id) }}"><button type="button">Download</button></a><br>
-            <a href="{{ url_for('preview', survey_id=survey.id) }}"><button type="button">Preview</button></a><br>
-            <a href="{{ url_for('delete', survey_id=survey.id) }}"><button type="button">Delete</button></a><br>
-            <a href="{{ url_for('edit', survey_id=survey.id) }}"><button type="button">Edit</button></a>
-            <a href="{{ url_for('download_results', survey_id=survey.id) }}"><button type="button">Results</button></a>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
+        {% endfor %}
     </table>
-  </div>
-</body>
+</div>
 
 {% endblock content %}
-

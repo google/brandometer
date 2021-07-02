@@ -1,189 +1,268 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
-<h1>Survey Creation</h1>
-<form action="" method="post">
-	{{ form.hidden_tag() }}
-	<p>
-	{{ form.surveyname.label }}
-	{{ form.surveyname(size=50) }}
-        {{ form.language.label }}
-        {{ form.language }}
-	</p>
-        <div style="padding: 20px 0 0">
-                {% for error in form.errors["question1"] %}
-                <div>
-                        <span style="color:red">{{error}}</span>
-                </div>
-                {% endfor %}
-                <p>
-                        {{ form.question1.label }}
-                        {{ form.question1(size=40) }}
-                        {{ form.question1type }}
-                        </p>
-                        <p>
-                        {{ form.answer1a.label }}
-                        {{ form.answer1a(size=32) }}
-                        {{ form.answer1anext.label }}
-                        {{ form.answer1anext }}
-                        <br>
-                        {{ form.answer1b.label }}
-                        {{ form.answer1b(size=32)}}
-                        {{ form.answer1bnext.label }}
-                        {{ form.answer1bnext }}
-                        <br>
-                        {{ form.answer1c.label }}
-                        {{ form.answer1c(size=32) }}
-                        {{ form.answer1cnext.label }}
-                        {{ form.answer1cnext }}
-                        <br>
-                        {{ form.answer1d.label }}
-                        {{ form.answer1d(size=32) }}
-                        {{ form.answer1dnext.label }}
-                        {{ form.answer1dnext }}
-                        <br>
-                </p>
-        </div>
-	
-        <div style="padding: 20px 0 0">
-                {% for error in form.errors["question2"] %}
-                <div>
-                        <span style="color:red">{{error}}</span>
-                </div>
-                {% endfor %}
-                <p>
-                        {{ form.question2.label }}
-                        {{ form.question2(size=40) }}
-                        {{ form.question2type }}
-                        </p>
-                        <p>
-                        {{ form.answer2a.label }}
-                        {{ form.answer2a(size=32) }}
-                        {{ form.answer2anext.label }}
-                        {{ form.answer2anext }}
-                        <br>
-                        {{ form.answer2b.label }}
-                        {{ form.answer2b(size=32) }}
-                        {{ form.answer2bnext.label }}
-                        {{ form.answer2bnext }}
-                        <br>
-                        {{ form.answer2c.label }}
-                        {{ form.answer2c(size=32) }}
-                        {{ form.answer2cnext.label }}
-                        {{ form.answer2cnext }}
-                        <br>
-                        {{ form.answer2d.label }}
-                        {{ form.answer2d(size=32) }}
-                        {{ form.answer2dnext.label }}
-                        {{ form.answer2dnext }}
-                        <br>
-                </p>
-        </div>
-	<div style="padding: 20px 0 0">
-                {% for error in form.errors["question3"] %}
-                <div>
-                        <span style="color:red">{{error}}</span>
-                </div>
-                {% endfor %}
-                <p>
-                        {{ form.question3.label }}
-                        {{ form.question3(size=40) }}
-                        {{ form.question3type }}
-                        </p>
-                        <p>
-                        {{ form.answer3a.label }}
-                        {{ form.answer3a(size=32) }}
-                        {{ form.answer3anext.label }}
-                        {{ form.answer3anext }}
-                        <br>
-                        {{ form.answer3b.label }}
-                        {{ form.answer3b(size=32) }}
-                        {{ form.answer3bnext.label }}
-                        {{ form.answer3bnext }}
-                        <br>
-                        {{ form.answer3c.label }}
-                        {{ form.answer3c(size=32) }}
-                        {{ form.answer3cnext.label }}
-                        {{ form.answer3cnext }}
-                        <br>
-                        {{ form.answer3d.label }}
-                        {{ form.answer3d(size=32) }}
-                        {{ form.answer3dnext.label }}
-                        {{ form.answer3dnext }}
-                        <br>
-                </p>
-        </div>
-        <div style="padding: 20px 0 0">
-                {% for error in form.errors["question4"] %}
-                <div>
-                        <span style="color:red">{{error}}</span>
-                </div>
-                {% endfor %}
-                <p>
-                        {{ form.question4.label }}
-                        {{ form.question4(size=40) }}
-                        {{ form.question4type }}
-                        </p>
-                        <p>
-                        {{ form.answer4a.label }}
-                        {{ form.answer4a(size=32) }}
-                        {{ form.answer4anext.label }}
-                        {{ form.answer4anext }}
-                        <br>
-                        {{ form.answer4b.label }}
-                        {{ form.answer4b(size=32) }}
-                        {{ form.answer4bnext.label }}
-                        {{ form.answer4bnext }}
-                        <br>
-                        {{ form.answer4c.label }}
-                        {{ form.answer4c(size=32) }}
-                        {{ form.answer4cnext.label }}
-                        {{ form.answer4cnext }}
-                        <br>
-                        {{ form.answer4d.label }}
-                        {{ form.answer4d(size=32) }}
-                        {{ form.answer4dnext.label }}
-                        {{ form.answer4dnext }}
-                        <br>
-                </p>
-        </div>
-        <div style="padding: 20px 0 0">
-                {% for error in form.errors["question5"] %}
-                <div>
-                        <span style="color:red">{{error}}</span>
-                </div>
-                {% endfor %}
-                <p>
-                        {{ form.question5.label }}
-                        {{ form.question5(size=40) }}
-                        {{ form.question5type }}
-                        </p>
-                        <p>
-                        {{ form.answer5a.label }}
-                        {{ form.answer5a(size=32) }}
-                        {{ form.answer5anext.label }}
-                        {{ form.answer5anext }}
-                        <br>
-                        {{ form.answer5b.label }}
-                        {{ form.answer5b(size=32) }}
-                        {{ form.answer5bnext.label }}
-                        {{ form.answer5bnext }}
-                        <br>
-                        {{ form.answer5c.label }}
-                        {{ form.answer5c(size=32) }}
-                        {{ form.answer5cnext.label }}
-                        {{ form.answer5cnext }}
-                        <br>
-                        {{ form.answer5d.label }}
-                        {{ form.answer5d(size=32) }}
-                        {{ form.answer5dnext.label }}
-                        {{ form.answer5dnext }}
-                        <br>
-                </p>
-        </div>
-	<p>{{ form.submit() }}</p>
-</form>
+<style type="text/css">
+    form .row {
+        padding-top: 15px;
+    }
+</style>
 
-{% endblock %}
+<div class="container">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            <label for="surveyname">Survey Name</label> {{ form.surveyname(class="form-control") }}
+        </p>
+        <p>
+            <label for="language">Language</label> {{ form.language(class="form-control") }}
+        </p>
 
+        <hr />
+        <div>
+            <h3>Question 1</h3>
+            {% for error in form.errors["question1"] %}
+            <div>
+                <span style="color:red">{{error}}</span>
+            </div>
+            {% endfor %}
+            <p>
+                <label for="question1">Question text</label> {{ form.question1(class="form-control") }}
+            </p>
+            <p>
+                <label for="question1Type">Type</label> {{ form.question1type(class="form-control") }}
+            </p>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer1a">Answer A Text</label> {{ form.answer1a(class="form-control") }}
+                </div>
+                <div class=" col-md-2">
+                    <label for="answer1anext">Answer A Next Question</label> {{ form.answer1anext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer1b">Answer B Text</label> {{ form.answer1b(class="form-control") }}
+                </div>
+                <div class=" col-md-2">
+                    <label for="answer1bnext">Answer B Next Question</label> {{ form.answer1bnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer1c">Answer C Text</label> {{ form.answer1c(class="form-control") }}
+                </div>
+                <div class=" col-md-2">
+                    <label for="answer1cnext">Answer C Next Question</label> {{ form.answer1cnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer1d">Answer D Text</label> {{ form.answer1d(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer1dnext">Answer D Next Question</label> {{ form.answer1dnext(class="form-control") }}
+                </div>
+            </div>
+        </div>
 
+        <hr />
+        <div>
+            <h3>Question 2</h3>
+            {% for error in form.errors["question2"] %}
+            <div>
+                <span style="color:red">{{error}}</span>
+            </div>
+            {% endfor %}
+            <p>
+                <label for="question2">Question text</label> {{ form.question2(class="form-control") }}
+            </p>
+            <p>
+                <label for="question2Type">Type</label> {{ form.question2type(class="form-control") }}
+            </p>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer2a">Answer A Text</label> {{ form.answer2a(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer2anext">Answer A Next Question</label> {{ form.answer2anext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer2b">Answer B Text</label> {{ form.answer2b(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer2bnext">Answer B Next Question</label> {{ form.answer2bnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer2c">Answer C Text</label> {{ form.answer2c(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer2cnext">Answer C Next Question</label> {{ form.answer2cnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer2d">Answer D Text</label> {{ form.answer2d(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer2dnext">Answer D Next Question</label> {{ form.answer2dnext(class="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div>
+            <h3>Question 3</h3>
+            {% for error in form.errors["question3"] %}
+            <div>
+                <span style="color:red">{{error}}</span>
+            </div>
+            {% endfor %}
+            <p>
+                <label for="question3">Question text</label> {{ form.question3(class="form-control") }}
+            </p>
+            <p>
+                <label for="question3Type">Type</label> {{ form.question3type(class="form-control") }}
+            </p>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer3a">Answer A Text</label> {{ form.answer3a(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer3anext">Answer A Next Question</label> {{ form.answer3anext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer3b">Answer B Text</label> {{ form.answer3b(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer3bnext">Answer B Next Question</label> {{ form.answer3bnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer3c">Answer C Text</label> {{ form.answer3c(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer3cnext">Answer C Next Question</label> {{ form.answer3cnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer3d">Answer D Text</label> {{ form.answer3d(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer3dnext">Answer D Next Question</label> {{ form.answer3dnext(class="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div>
+            <h3>Question 4</h3>
+            {% for error in form.errors["question4"] %}
+            <div>
+                <span style="color:red">{{error}}</span>
+            </div>
+            {% endfor %}
+            <p>
+                <label for="question4">Question text</label> {{ form.question4(class="form-control") }}
+            </p>
+            <p>
+                <label for="question4Type">Type</label> {{ form.question4type(class="form-control") }}
+            </p>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer4a">Answer A Text</label> {{ form.answer4a(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer4anext">Answer A Next Question</label> {{ form.answer4anext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer4b">Answer B Text</label> {{ form.answer4b(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer4bnext">Answer B Next Question</label> {{ form.answer4bnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer4c">Answer C Text</label> {{ form.answer4c(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer4cnext">Answer C Next Question</label> {{ form.answer4cnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer4d">Answer D Text</label> {{ form.answer4d(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer4dnext">Answer D Next Question</label> {{ form.answer4dnext(class="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div>
+            <h3>Question 5</h3>
+            {% for error in form.errors["question5"] %}
+            <div>
+                <span style="color:red">{{error}}</span>
+            </div>
+            {% endfor %}
+            <p>
+                <label for="question5">Question text</label> {{ form.question5(class="form-control") }}
+            </p>
+            <p>
+                <label for="question5Type">Type</label> {{ form.question5type(class="form-control") }}
+            </p>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer5a">Answer A Text</label> {{ form.answer5a(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer5anext">Answer A Next Question</label> {{ form.answer5anext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer5b">Answer B Text</label> {{ form.answer5b(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer5bnext">Answer B Next Question</label> {{ form.answer5bnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer5c">Answer C Text</label> {{ form.answer5c(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer5cnext">Answer C Next Question</label> {{ form.answer5cnext(class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="answer5d">Answer D Text</label> {{ form.answer5d(class="form-control") }}
+                </div>
+                <div class="col-md-2">
+                    <label for="answer5dnext">Answer D Next Question</label> {{ form.answer5dnext(class="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <p>
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('index') }}" class="btn btn-default">Cancel</a>
+        </p>
+    </form>
+
+    {% endblock %}
+</div>

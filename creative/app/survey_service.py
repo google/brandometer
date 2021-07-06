@@ -173,7 +173,6 @@ def download_results(surveyid):
         SELECT *
         FROM `{table_id}`
         WHERE ID = @survey_id
-        LIMIT 1000
     """
   job_config = bigquery.QueryJobConfig(query_parameters=[
       bigquery.ScalarQueryParameter('survey_id', 'STRING', surveyid),
@@ -184,16 +183,19 @@ def download_results(surveyid):
   output = {'Date': [], 'Control/Expose': [], 'Dimension 2': []}
   outputdf = pd.DataFrame(data=output)
   outputdf['Date'] = df['CreatedAt'].values
+  outputdf['Control/Expose'] = df['Segmentation'].values
   responselist = df['Response'].str.split(pat=('|'), expand=True)
   columns = list(responselist)
   for i in columns:
     responselist[i] = responselist[i].str.slice(start=2)
-  responselist = responselist.rename(columns={
-      0: 'Response 1',
-      1: 'Response 2',
-      2: 'Response 3',
-      3: 'Response 4'
-  })
+  responselist = responselist.rename(
+      columns={
+          0: 'Response 1',
+          1: 'Response 2',
+          2: 'Response 3',
+          3: 'Response 4',
+          4: 'Response 5'
+      })
   responselist = responselist.reset_index(drop=True)
   outputdf = pd.concat([outputdf, responselist], axis=1)
   print(outputdf)

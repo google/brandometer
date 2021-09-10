@@ -24,6 +24,8 @@ from wtforms import SubmitField
 from wtforms.validators import DataRequired
 from wtforms.validators import ValidationError
 
+BRAND_TRACK = 'brand_track'
+BRAND_LIFT = 'brand_lift'
 
 def question_section_is_empty(form, questionNumber):
   """Check if any field of the question input including answer is empty."""
@@ -70,6 +72,8 @@ class QuestionForm(FlaskForm):
   question5type = SelectField(
       'question5Type', choices=('SINGLE_OPTION', 'MULTIPLE_OPTION'))
   language = SelectField('language', choices=('en', 'ms', 'zh', 'ja', 'ko'))
+  surveytype = SelectField('surveyType', choices=[(
+    BRAND_LIFT, 'Brand Lift', BRAND_TRACK, 'Brand Track')])
   surveyname = StringField('surveyName', validators=[DataRequired()])
   question1 = StringField('question1', validators=[DataRequired()])
   answer1a = StringField('answer1a', validators=[DataRequired()])

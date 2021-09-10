@@ -163,15 +163,15 @@ def get_question_json(survey):
   return all_question_json
 
 
-def download_results(surveyid):
-  """Download survey results in a CSV format file."""
+def get_survey_results(surveyid):
+  """Get data from survey"""
   google.cloud.bigquery.magics.context.use_bqstorage_api = True
   project_id = os.environ.get('PROJECT_ID')
   table_id = os.environ.get('TABLE_ID')
   client = bigquery.Client(project=project_id)
   bqstorageclient = bigquery_storage.BigQueryReadClient()
   query = f"""
-        SELECT *
+        SELECT CreatedAt, Segmentation, Response
         FROM `{table_id}`
         WHERE ID = @survey_id
     """
@@ -180,7 +180,12 @@ def download_results(surveyid):
   ])
   query_job = client.query(query, job_config=job_config)
   df = query_job.result().to_dataframe(bqstorage_client=bqstorageclient)
-  df = df[df['ID'] == surveyid]
+  return df
+
+
+def download_results(surveyid):
+  """Download survey results in a CSV format file."""
+  df = get_survey_results(surveyid)
   output = {'Date': [], 'Control/Expose': [], 'Dimension 2': []}
   outputdf = pd.DataFrame(data=output)
   outputdf['Date'] = df['CreatedAt'].values

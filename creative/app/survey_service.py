@@ -23,7 +23,7 @@ from google.cloud import bigquery_storage
 import google.cloud.bigquery.magics
 import pandas as pd
 import survey_collection
-
+from forms import BRAND_TRACK
 
 def get_all():
   return survey_collection.get_all()
@@ -69,7 +69,8 @@ def zip_file(survey_id):
   current_datetime = datetime.datetime.now().strftime('%Y%m%d')
   surveyname = survey_dict['surveyname'].replace(' ', '-')
   prefix_filename = current_datetime + '_' + surveyname
-  seg_types = ['default_control', 'default_expose']
+  survey_type = survey_dict.get('surveytype', '')
+  seg_types = [''] if survey_type == BRAND_TRACK else ['default_control', 'default_expose']
 
   # create zip
   template_zips = write_html_template(survey_id, survey_dict, prefix_filename,

@@ -34,6 +34,12 @@
                     <a href="{{ url_for('download_zip', survey_id=survey.id) }}">
                         <button type="button" class="btn">Download</button>
                     </a>
+                    {% if survey|has_reporting %}
+                    &nbsp;
+                    <a href="{{ url_for('reporting', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-info">Reporting</button>
+                    </a>
+                    {% endif %}
                     &nbsp;
                     <a href="{{ url_for('download_results', survey_id=survey.id) }}">
                         <button type="button" class="btn btn-info">Results</button>

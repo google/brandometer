@@ -28,6 +28,7 @@ from flask_basicauth import BasicAuth
 from flask_bootstrap import Bootstrap
 import forms
 import survey_service
+from forms import BRAND_TRACK
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
@@ -130,6 +131,24 @@ def download_results(survey_id):
         headers={'Content-disposition': 'attachment; filename=surveydata.csv'})
 
 
+@app.route('/survey/reporting/<string:survey_id>', methods=['GET'])
+def reporting(survey_id):
+  """Survey reporting."""
+  survey_doc = survey_service.get_doc_by_id(survey_id)
+
+  if survey_doc.exists:
+    survey_info = survey_doc.to_dict()
+    results = survey_service.get_brand_lift_results(survey_id)
+    return render_template(
+        'reporting.html',
+        results=results,
+        survey=survey_info,
+        survey_id=survey_id)
+  else:
+    flash('Survey not found')
+    return redirect(url_for('index'))
+
+
 @app.context_processor
 def inject_receiver_params():
   return {
@@ -144,6 +163,16 @@ def inject_receiver_params():
 @app.template_filter('get_all_question_text')
 def get_all_question_text(survey):
   return survey_service.get_all_question_text(survey.to_dict())
+
+
+@app.template_filter('format_percentage')
+def format_percentage(num):
+  return "{:.2%}".format(num)
+
+
+@app.template_filter('has_reporting')
+def is_brand_track(survey):
+  return survey.to_dict().get('surveytype', '') != BRAND_TRACK
 
 
 if __name__ == '__main__':

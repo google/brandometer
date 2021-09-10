@@ -21,6 +21,7 @@ from flask import render_template
 from google.cloud import bigquery
 from google.cloud import bigquery_storage
 import google.cloud.bigquery.magics
+import numpy as np
 import pandas as pd
 import survey_collection
 from forms import BRAND_TRACK
@@ -161,6 +162,37 @@ def get_question_json(survey):
       next_question[answer_id] = survey.get('answer' + str(i) + j + 'next', '')
     all_question_json.append(question)
   return all_question_json
+
+
+def get_brand_lift_results(surveyid):
+  df = get_survey_results(surveyid)
+  responselist = df['Response'].str.split(pat=('|'), expand=True)
+  columns = list(responselist)
+  for i in columns:
+    responselist[i] = responselist[i].str.slice(start=2)
+  df = pd.concat([df, responselist], axis=1)
+  df.drop(['CreatedAt', 'Response'], axis=1, inplace=True)
+  df.replace(regex='default_', value='', inplace=True)
+
+  output = []
+  for i in range(len(df.columns)-1):
+    # aggregate count
+    pivot = df.pivot_table(index='Segmentation', columns=i, aggfunc=len, fill_value=0)
+    # rearrange rows
+    pivot = pivot.reindex(['expose', 'control'])
+    # convert count to percentages
+    pivot = pivot.div(pivot.sum(axis=1), axis=0)
+
+    # compute brand lift
+    matrix = pivot.to_numpy()
+    lift = []
+    for col in matrix.T:
+      lift.append((col[0]-col[1])/col[1])
+
+    # append brand lift to matrix
+    matrix = np.vstack([matrix, lift])
+    output.append(matrix)
+  return output
 
 
 def get_survey_results(surveyid):

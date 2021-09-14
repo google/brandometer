@@ -120,11 +120,11 @@ def download_zip(survey_id):
       attachment_filename=filename)
 
 
-@app.route('/survey/download_results/<string:survey_id>', methods=['GET'])
-def download_results(survey_id):
-  """Download survey results."""
+@app.route('/survey/download_responses/<string:survey_id>', methods=['GET'])
+def download_responses(survey_id):
+  """Download survey responses."""
   if request.method == 'GET':
-    csv = survey_service.download_results(survey_id)
+    csv = survey_service.download_responses(survey_id)
     return Response(
         csv,
         mimetype='text/csv',

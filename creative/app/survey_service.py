@@ -165,7 +165,7 @@ def get_question_json(survey):
 
 
 def get_brand_lift_results(surveyid):
-  df = get_survey_results(surveyid)
+  df = get_survey_responses(surveyid)
   responselist = df['Response'].str.split(pat=('|'), expand=True)
   columns = list(responselist)
   for i in columns:
@@ -195,7 +195,7 @@ def get_brand_lift_results(surveyid):
   return output
 
 
-def get_survey_results(surveyid):
+def get_survey_responses(surveyid):
   """Get data from survey"""
   google.cloud.bigquery.magics.context.use_bqstorage_api = True
   project_id = os.environ.get('PROJECT_ID')
@@ -215,9 +215,9 @@ def get_survey_results(surveyid):
   return df
 
 
-def download_results(surveyid):
-  """Download survey results in a CSV format file."""
-  df = get_survey_results(surveyid)
+def download_responses(surveyid):
+  """Download survey responses in a CSV format file."""
+  df = get_survey_responses(surveyid)
   output = {'Date': [], 'Control/Expose': [], 'Dimension 2': []}
   outputdf = pd.DataFrame(data=output)
   outputdf['Date'] = df['CreatedAt'].values

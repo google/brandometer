@@ -73,7 +73,7 @@ class QuestionForm(FlaskForm):
       'question5Type', choices=('SINGLE_OPTION', 'MULTIPLE_OPTION'))
   language = SelectField('language', choices=('en', 'ms', 'zh', 'ja', 'ko'))
   surveytype = SelectField('surveyType', choices=[(
-    BRAND_LIFT, 'Brand Lift', BRAND_TRACK, 'Brand Track')])
+    BRAND_LIFT, 'Brand Lift'), (BRAND_TRACK, 'Brand Track')])
   surveyname = StringField('surveyName', validators=[DataRequired()])
   question1 = StringField('question1', validators=[DataRequired()])
   answer1a = StringField('answer1a', validators=[DataRequired()])

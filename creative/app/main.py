@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Import of required packages/libraries."""
 
 import datetime
@@ -27,8 +26,8 @@ from flask import url_for
 from flask_basicauth import BasicAuth
 from flask_bootstrap import Bootstrap
 import forms
-import survey_service
 from forms import BRAND_TRACK
+import survey_service
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
@@ -73,7 +72,7 @@ def preview(survey_id):
         manual_responses=True,
         show_back_button=True,
         all_question_json=survey_service.get_question_json(survey_info),
-        seg='default',
+        seg='preview',
         thankyou_text=survey_service.get_thank_you_text(survey_info),
         next_text=survey_service.get_next_text(survey_info),
         comment_text=survey_service.get_comment_text(survey_info))
@@ -108,7 +107,7 @@ def edit():
 
 @app.route('/survey/download_zip/<string:survey_id>', methods=['GET'])
 def download_zip(survey_id):
-  """Survey preview."""
+  """Download zip of survey creative(s)."""
   filename, data = survey_service.zip_file(survey_id)
   return send_file(
       data,
@@ -167,7 +166,7 @@ def get_all_question_text(survey):
 
 @app.template_filter('format_percentage')
 def format_percentage(num):
-  return "{:.2%}".format(num)
+  return '{:.2%}'.format(num)
 
 
 @app.template_filter('has_reporting')

@@ -13,12 +13,15 @@
 # limitations under the License.
 """Import relevant packages/libraries."""
 import os
+import tempfile
+from unittest import TestCase
+from unittest.mock import call
+from unittest.mock import Mock
+from unittest.mock import patch
+import zipfile
+
 import survey_collection
 import survey_service
-from unittest import TestCase
-from unittest.mock import Mock
-from unittest.mock import call
-from unittest.mock import patch
 
 
 class TestSurveyService(TestCase):
@@ -77,22 +80,19 @@ class TestSurveyService(TestCase):
   #def test_get_html_template(self):
 
   def test_delete_tmp_zip_files(self):
-    # given
-    filename = 'mock-file-name'
-    seg_types = ['default_control', 'default_expose']
     os.remove = Mock()
+    with tempfile.TemporaryDirectory() as tmpdir:
+      # given
+      zip1 = zipfile.ZipFile(tmpdir + 'mock-file-name.zip', 'w')
+      zip2 = zipfile.ZipFile(tmpdir + 'mock-file-name2.zip', 'w')
 
-    # when
-    survey_service.delete_tmp_zip_files(filename, seg_types)
+      # when
+      survey_service.delete_tmp_zip_files([zip1, zip2])
 
-    # then
-    expected_calls = [
-        call('mock-file-name_default_control.zip'),
-        call('mock-file-name_default_expose.zip'),
-        call('mock-file-name.zip')
-    ]
-    os.remove.assert_has_calls(expected_calls)
-    assert os.remove.call_count == 3
+      # then
+      expected_calls = [call(zip1.filename), call(zip2.filename)]
+      os.remove.assert_has_calls(expected_calls)
+      assert os.remove.call_count == 2
 
   # TODO
   #def test_get_question_json(self):

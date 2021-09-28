@@ -159,7 +159,7 @@ def get_question_json(survey):
       if answer_text:
         answer_id = j.capitalize()
         options.append({'id': answer_id, 'role': 'option', 'text': answer_text})
-      next_question[answer_id] = survey.get('answer' + str(i) + j + 'next', '')
+        next_question[answer_id] = survey.get('answer' + str(i) + j + 'next', '')
     all_question_json.append(question)
   return all_question_json
 

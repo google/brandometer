@@ -8,4 +8,5 @@ pandas==1.2.4
 ipython==7.22.0
 pyarrow==4.0.0
 pytest==6.2.3
+mock-firestore==0.10.0
 Flask-BasicAuth==0.2.0

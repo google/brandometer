@@ -236,8 +236,7 @@ def download_responses(surveyid):
       })
   responselist = responselist.reset_index(drop=True)
   outputdf = pd.concat([outputdf, responselist], axis=1)
-  print(outputdf)
-  csv = outputdf.to_csv()
+  csv = outputdf.to_csv(index=False)
   return csv
 
 

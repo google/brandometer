@@ -74,4 +74,8 @@ sed -e "s/{{LOCATION}}/$LOCATION/" -e "s/{{PROJECT_ID}}/$PROJECT_ID/" -e "s/{{AU
 
 echo -e "\n-- Deploy app engine"
 cd creative/app
-gcloud app deploy ./$PROJECT_ID.yaml --quiet
+if ! gcloud app deploy ./$PROJECT_ID.yaml --quiet; then
+    echo -e "\n-- ERROR: App Engine deployment failed. This is usually caused by a delay in project config rollout."
+    echo -e "Please wait 1-2 minutes and run:"
+    echo -e "\tcd creative/app && gcloud app deploy ./$PROJECT_ID.yaml --quiet"
+fi

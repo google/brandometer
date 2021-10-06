@@ -26,6 +26,8 @@ from wtforms.validators import ValidationError
 
 BRAND_TRACK = 'brand_track'
 BRAND_LIFT = 'brand_lift'
+ANSWERS_ORDERED = 'ORDERED'
+ANSWERS_SHUFFLED = 'SHUFFLED'
 
 def question_section_is_empty(form, questionNumber):
   """Check if any field of the question input including answer is empty."""
@@ -71,6 +73,13 @@ class QuestionForm(FlaskForm):
       'question4Type', choices=('SINGLE_OPTION', 'MULTIPLE_OPTION'))
   question5type = SelectField(
       'question5Type', choices=('SINGLE_OPTION', 'MULTIPLE_OPTION'))
+  question_order_choices = [(ANSWERS_SHUFFLED, 'Shuffled'),
+          (ANSWERS_ORDERED, 'Ordered')]
+  question1order = SelectField('question1Order', choices=question_order_choices)
+  question2order = SelectField('question2Order', choices=question_order_choices)
+  question3order = SelectField('question3Order', choices=question_order_choices)
+  question4order = SelectField('question4Order', choices=question_order_choices)
+  question5order = SelectField('question5Order', choices=question_order_choices)
   language = SelectField('language', choices=('en', 'ms', 'zh', 'ja', 'ko'))
   surveytype = SelectField('surveyType', choices=[(
     BRAND_LIFT, 'Brand Lift'), (BRAND_TRACK, 'Brand Track')])

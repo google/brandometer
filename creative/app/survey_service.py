@@ -146,12 +146,14 @@ def get_question_json(survey):
     options = []
     next_question = {}
     question_type = survey.get('question' + str(i) + 'type')
+    answers_order = survey.get('question' + str(i) + 'order')
     if question_text:
       question = {
           'id': i,
           'type': question_type,
           'text': question_text,
           'options': options,
+          'answersOrder': answers_order,
           'next_question': next_question
       }
     for j in ['a', 'b', 'c', 'd']:

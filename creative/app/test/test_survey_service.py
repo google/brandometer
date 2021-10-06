@@ -117,6 +117,7 @@ class TestSurveyService(unittest.TestCase):
     survey = {
         'question1': 'q1 text',
         'question1type': 'q1type',
+        'question1order': 'ORDERED',
         'answer1a': 'a1a',
         'answer1anext': 'end',
         'answer1b': 'a1b',
@@ -126,6 +127,7 @@ class TestSurveyService(unittest.TestCase):
     json = survey_service.get_question_json(survey)
     self.assertDictEqual(
         json[0], {
+            'answersOrder': 'ORDERED',
             'id':
                 1,
             'text':

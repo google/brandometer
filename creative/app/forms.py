@@ -34,14 +34,9 @@ def question_section_is_empty(form, questionNumber):
   questionField = 'question' + questionNumber
   answerAField = 'answer' + questionNumber + 'a'
   answerBField = 'answer' + questionNumber + 'b'
-  answerCField = 'answer' + questionNumber + 'c'
-  answerDField = 'answer' + questionNumber + 'd'
   return not (form.data[questionField] and form.data[answerAField] and
-              form.data[answerBField] and form.data[answerCField] and
-              form.data[answerDField] and form.data[answerAField + 'next'] and
-              form.data[answerBField + 'next'] and
-              form.data[answerCField + 'next'] and
-              form.data[answerDField + 'next'])
+              form.data[answerBField] and form.data[answerAField + 'next'] and
+              form.data[answerBField + 'next'])
 
 
 def validate_next_question(form, field):
@@ -87,16 +82,14 @@ class QuestionForm(FlaskForm):
   question1 = StringField('question1', validators=[DataRequired()])
   answer1a = StringField('answer1a', validators=[DataRequired()])
   answer1b = StringField('answer1b', validators=[DataRequired()])
-  answer1c = StringField('answer1c', validators=[DataRequired()])
-  answer1d = StringField('answer1d', validators=[DataRequired()])
+  answer1c = StringField('answer1c')
+  answer1d = StringField('answer1d')
   answer1anext = StringField(
       'answer1aNext', default='end', validators=[DataRequired()])
   answer1bnext = StringField(
       'answer1bNext', default='end', validators=[DataRequired()])
-  answer1cnext = StringField(
-      'answer1cNext', default='end', validators=[DataRequired()])
-  answer1dnext = StringField(
-      'answer1dNext', default='end', validators=[DataRequired()])
+  answer1cnext = StringField('answer1cNext', default='end')
+  answer1dnext = StringField('answer1dNext', default='end')
   answer2anext = StringField('answer2aNext', default='end')
   answer2bnext = StringField('answer2bNext', default='end')
   answer2cnext = StringField('answer2cNext', default='end')

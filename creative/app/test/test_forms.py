@@ -34,22 +34,24 @@ class QuestionFormTest(unittest.TestCase):
             app.config['WTF_CSRF_ENABLED'] = False
             return forms.QuestionForm(data=data)
 
-    def test_question_section_is_empty_when_question_is_valid(self):
-        valid_form = self.create_form(COMPLETE_QUESTION1)
-
-        test_valid = forms.question_section_is_empty(valid_form, '1')
-        self.assertFalse(test_valid)
+    def test_question_section_is_empty_when_question_has_2_or_more_answers(self):
+        cases = [COMPLETE_QUESTION1,
+            dict(COMPLETE_QUESTION1, answer1d=None, answer1dnext=None),
+            dict(COMPLETE_QUESTION1, answer1c=None, answer1cnext=None,
+                answer1d=None, answer1dnext=None),
+        ]
+ 
+        for valid_question in cases:
+            valid_form = self.create_form(valid_question)
+            test_valid = forms.question_section_is_empty(valid_form, '1')
+            self.assertFalse(test_valid)
 
     def test_question_section_is_empty_when_question_is_invalid(self):
         invalid_question_cases = [dict(COMPLETE_QUESTION1, question1=None),
             dict(COMPLETE_QUESTION1, answer1a=None),
             dict(COMPLETE_QUESTION1, answer1b=None),
-            dict(COMPLETE_QUESTION1, answer1c=None),
-            dict(COMPLETE_QUESTION1, answer1d=None),
             dict(COMPLETE_QUESTION1, answer1anext=None),
             dict(COMPLETE_QUESTION1, answer1bnext=None),
-            dict(COMPLETE_QUESTION1, answer1cnext=None),
-            dict(COMPLETE_QUESTION1, answer1dnext=None)
         ]
 
         for invalid_question in invalid_question_cases:

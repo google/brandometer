@@ -108,7 +108,8 @@ def edit():
 @app.route('/survey/download_zip/<string:survey_id>', methods=['GET'])
 def download_zip(survey_id):
   """Download zip of survey creative(s)."""
-  filename, data = survey_service.zip_file(survey_id)
+  survey_doc = survey_service.get_doc_by_id(survey_id)
+  filename, data = survey_service.zip_file(survey_id, survey_doc.to_dict())
   return send_file(
       data,
       mimetype='application/zip',

@@ -26,6 +26,7 @@ import pandas as pd
 import survey_collection
 from forms import BRAND_TRACK
 
+
 def get_all():
   return survey_collection.get_all()
 
@@ -59,19 +60,19 @@ def set_form_data(form, edit_doc):
     form[key].data = edit_doc.get(key,)
 
 
-def zip_file(survey_id):
+def zip_file(survey_id, survey_dict):
   """File download function."""
   # Make these use temp files in '/tmp/' to work around
   # App Engine read only filesystem
 
   # Prepare data
-  survey_doc = get_doc_by_id(survey_id)
-  survey_dict = survey_doc.to_dict()
   current_datetime = datetime.datetime.now().strftime('%Y%m%d')
   surveyname = survey_dict['surveyname'].replace(' ', '-')
   prefix_filename = current_datetime + '_' + surveyname
   survey_type = survey_dict.get('surveytype', '')
-  seg_types = [''] if survey_type == BRAND_TRACK else ['default_control', 'default_expose']
+  seg_types = [''] if survey_type == BRAND_TRACK else [
+      'default_control', 'default_expose'
+  ]
 
   # create zip
   template_zips = write_html_template(survey_id, survey_dict, prefix_filename,
@@ -161,14 +162,18 @@ def get_question_json(survey):
       if answer_text:
         answer_id = j.capitalize()
         options.append({'id': answer_id, 'role': 'option', 'text': answer_text})
-        next_question[answer_id] = survey.get('answer' + str(i) + j + 'next', '')
+        next_question[answer_id] = survey.get('answer' + str(i) + j + 'next',
+                                              '')
     all_question_json.append(question)
   return all_question_json
 
 
 def get_brand_lift_results(surveyid):
   df = get_survey_responses(surveyid)
-  responselist = df['Response'].str.split(pat=('|'), expand=True)
+  if df['Response'].any():
+    responselist = df['Response'].str.split(pat=('|'), expand=True)
+  else:
+    responselist = pd.DataFrame()
   columns = list(responselist)
   for i in columns:
     responselist[i] = responselist[i].str.slice(start=2)
@@ -177,9 +182,10 @@ def get_brand_lift_results(surveyid):
   df.replace(regex='default_', value='', inplace=True)
 
   output = []
-  for i in range(len(df.columns)-1):
+  for i in range(len(df.columns) - 1):
     # aggregate count
-    pivot = df.pivot_table(index='Segmentation', columns=i, aggfunc=len, fill_value=0)
+    pivot = df.pivot_table(
+        index='Segmentation', columns=i, aggfunc=len, fill_value=0)
     # rearrange rows
     pivot = pivot.reindex(['expose', 'control'])
     # convert count to percentages
@@ -189,7 +195,7 @@ def get_brand_lift_results(surveyid):
     matrix = pivot.to_numpy()
     lift = []
     for col in matrix.T:
-      lift.append((col[0]-col[1])/col[1])
+      lift.append((col[0] - col[1]) / col[1])
 
     # append brand lift to matrix
     matrix = np.vstack([matrix, lift])
@@ -197,12 +203,13 @@ def get_brand_lift_results(surveyid):
   return output
 
 
-def get_survey_responses(surveyid):
+def get_survey_responses(surveyid, client=None):
   """Get data from survey"""
   google.cloud.bigquery.magics.context.use_bqstorage_api = True
   project_id = os.environ.get('PROJECT_ID')
   table_id = os.environ.get('TABLE_ID')
-  client = bigquery.Client(project=project_id)
+  if client is None:
+    client = bigquery.Client(project=project_id)
   bqstorageclient = bigquery_storage.BigQueryReadClient()
   query = f"""
         SELECT CreatedAt, Segmentation, Response
@@ -224,7 +231,10 @@ def download_responses(surveyid):
   outputdf = pd.DataFrame(data=output)
   outputdf['Date'] = df['CreatedAt'].values
   outputdf['Control/Expose'] = df['Segmentation'].values
-  responselist = df['Response'].str.split(pat=('|'), expand=True)
+  if df['Response'].any():
+    responselist = df['Response'].str.split(pat=('|'), expand=True)
+  else:
+    responselist = pd.DataFrame()
   columns = list(responselist)
   for i in columns:
     responselist[i] = responselist[i].str.slice(start=2)

@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% block content %}
+
+<style type="text/css">
+  form .row {
+    padding-top: 15px;
+  }
+</style>
+
+<div class="container">
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+      <label for="surveyname">Survey Name</label>
+      {{ form.surveyname(class="form-control") }}
+    </p>
+    <p>
+      <label for="surveytype">Survey Type</label>
+      {{ form.surveytype(class="form-control") }}
+    </p>
+    <p>
+      <label for="language">Language</label>
+      {{ form.language(class="form-control") }}
+    </p>
+
+    {% for n in range(1, 6) %}
+    <hr />
+    <div>
+      {% set question = 'question' + n|string %}
+      <h3>Question {{n|string}}</h3>
+      {% for error in form.errors[question] %}
+      <div><span style="color:red">{{error}}</span></div>
+      {% endfor %}
+      <p>
+        <label for="{{question}}">Question Text</label>
+        {{ form[question](class="form-control") }}
+      </p>
+      <p>
+        <label for="{{question}}type">Type</label>
+        {{ form[question + "type"](class="form-control") }}
+      </p>
+      <p>
+        <label for="{{question}}order">Order</label>
+        {{ form[question + "order"](class="form-control") }}
+      </p>
+      {% for letter in ['a', 'b', 'c', 'd'] %}
+      {% set answer = 'answer' + n|string + letter %}
+      <div class="row">
+        <div class="col-md-5">
+          <label for="{{answer}}">Answer {{letter|upper}} Text</label>
+          {{ form[answer](class="form-control") }}
+        </div>
+        <div class="col-md-2">
+          <label for="{{answer}}next">
+            Answer {{letter|upper}} Next Question
+          </label>
+          {{ form[answer + "next"](class="form-control") }}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <hr />
+    <p>
+      {{ form.submit(class="btn btn-primary") }}
+      <a href="{{ url_for('index') }}" class="btn btn-default">Cancel</a>
+    </p>
+  </form>
+
+  {% endblock %}
+</div>

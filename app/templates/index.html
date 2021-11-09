@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Questions</th>
+                <th scope="col">View</th>
+                <th scope="col">Download</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        {% for survey in all_surveys %}
+        <tr>
+            <td>{{ (survey.to_dict())['surveyname'] }}</td>
+            <td>
+                <table class="table">
+                    <ol>
+                        {% for question_text in survey | get_all_question_text %}
+                        <li>{{ question_text }}</li>
+                        {% endfor %}
+                    </ol>
+                </table>
+            </td>
+            <td>
+                <form>
+                    <a href="{{ url_for('preview', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-link">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Survey
+                        </button>
+                    </a>
+                    {% if survey|has_reporting %}
+                    <a href="{{ url_for('reporting', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-link">
+                            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Brand Lift
+                        </button>
+                    </a>
+                    {% endif %}
+               </form>
+            </td>
+            <td>
+                <form>
+                    <a href="{{ url_for('download_zip', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Zip
+                        </button>
+                    </a>
+                    <a href="{{ url_for('download_responses', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Responses
+                        </button>
+                    </a>
+               </form>
+            </td>
+            <td>
+                <form>
+                    <a href="{{ url_for('edit', survey_id=survey.id) }}">
+                        <button type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </button>
+                    </a>
+                    <a href="{{ url_for('delete', survey_id=survey.id) }}" onclick="return confirm('Really delete?')">
+                        <button type="button" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                    </a>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock content %}

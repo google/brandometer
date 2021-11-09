@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# Fail on any error
+set -e
+
+PROJECT_ID=$1
+LOCATION=$2
+REGION=$3
+
+if [ -z "$PROJECT_ID" ] || [ -z "$LOCATION" ] || [ -z "$REGION" ]; then
+    # To list possible values for:
+    #   LOCATION: $ gcloud functions regions list
+    #   REGION: $  gcloud app regions list
+    echo "Usage: ./deploy project-id dataset_location app_region"
+    echo "Example: ./deploy my-project-id asia-southeast2 asia-southeast2"
+    exit 1
+fi
+
+# Set gcloud to project id
+echo -e "\n-- Deploying to $PROJECT_ID"
+gcloud config set project $PROJECT_ID
+
+echo -e "\n-- Enable required APIs"
+gcloud services enable cloudbuild.googleapis.com
+gcloud services enable firestore.googleapis.com
+gcloud services enable appengine.googleapis.com
+gcloud services enable cloudfunctions.googleapis.com
+
+# Deploy receiver endpoint.
+cd receiver
+
+echo -e "\n-- Create BigQuery dataset"
+bq --location=$LOCATION mk \
+    --force \
+    --dataset \
+    --description "Main response data set for Brand-o-meter" \
+    $PROJECT_ID:responses
+
+echo -e "\n-- Deploy Cloud Function for receiver"
+gcloud functions deploy receiver \
+    --runtime python37 \
+    --entry-point=receiver \
+    --region=$LOCATION \
+    --trigger-http \
+    --allow-unauthenticated \
+    --set-env-vars TABLE_ID=$PROJECT_ID.responses.responses
+
+# Exit receiver dir.
+cd ..
+
+echo -e "\nSet up basic App Engine to allow firestore setup (if none exists)"
+if gcloud app services list; then
+    echo "App Engine already configured. Continuing..."
+else
+    gcloud app create --region=$REGION
+fi
+
+echo -e "\n-- Deploy firestore for survey configuration"
+gcloud firestore databases create --region=$REGION
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$PROJECT_ID@appspot.gserviceaccount.com" \
+    --role="roles/editor"
+gcloud iam service-accounts keys create ./$PROJECT_ID-credentials.json \
+    --iam-account=$PROJECT_ID@appspot.gserviceaccount.com
+
+# Setting authentication login services
+echo -e "\n-- Set your authentication login credentials"
+read -p 'Username: ' AUTH_USERNAME
+read -sp 'Password: ' AUTH_PASSWORD
+echo -e "\n-- Thank you, the authentication credentials has been set as $AUTH_USERNAME & $AUTH_PASSWORD"
+
+echo -e "\n-- Set up app engine config"
+sed -e "s/{{LOCATION}}/$LOCATION/" -e "s/{{PROJECT_ID}}/$PROJECT_ID/" -e "s/{{AUTH_USERNAME}}/$AUTH_USERNAME/" -e "s/{{AUTH_PASSWORD}}/$AUTH_PASSWORD/" creative/app/app.yaml.template >./creative/app/$PROJECT_ID.yaml
+
+echo -e "\n-- Deploy app engine"
+cd creative/app
+if ! gcloud app deploy ./$PROJECT_ID.yaml --quiet; then
+    echo -e "\n-- ERROR: App Engine deployment failed. This is usually caused by a delay in project config rollout."
+    echo -e "Please wait 1-2 minutes and run:"
+    echo -e "\tcd creative/app && gcloud app deploy ./$PROJECT_ID.yaml --quiet"
+fi

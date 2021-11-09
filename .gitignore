@@ -3,3 +3,6 @@ target
 .classpath
 .factorypath
 .settings
+.DS_Store
+*-credentials.json
+creative/app/*.yaml

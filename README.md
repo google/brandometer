@@ -96,8 +96,8 @@ If the deploy fails with an error, wait 5 minutes and try again. Sometimes a new
 2. Each BOM cut/creative will have to be assigned in a separate LI. i.e. If you have Male & Female cuts then you will have 2 placements in CM and respective 2 Line items in DV360.
 
 # Reporting
-Use [this template](https://docs.google.com/spreadsheets/d/1h9sQois-mw2wYeddQ3khKwPp8LlGTTVBDP9tZmUpQpQ) to add responses & generate lift
-Sample report [here](https://docs.google.com/spreadsheets/d/17Q6zvQMd7sxDd6xd74rducntfd0p3oKG9y5lzpjInks).
+Use [this template](https://docs.google.com/spreadsheets/d/1hMe8AdjjzDHPUO9y9J3vZpDmGkPLzbiNpc6b_iAfl-k/edit?usp=sharing) to add responses & generate lift
+Sample report [here](https://docs.google.com/spreadsheets/d/1aRtO7PdeXqrjC9J8ItmEPkK012c2JIzRGDbPIyI8OQI/edit?usp=sharing).
 
 # FAQ
 1. Can we have multiple questions?

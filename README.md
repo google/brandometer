@@ -99,6 +99,11 @@ If the deploy fails with an error, wait 5 minutes and try again. Sometimes a new
 Use [this template](https://docs.google.com/spreadsheets/d/1hMe8AdjjzDHPUO9y9J3vZpDmGkPLzbiNpc6b_iAfl-k/edit?usp=sharing) to add responses & generate lift
 Sample report [here](https://docs.google.com/spreadsheets/d/1aRtO7PdeXqrjC9J8ItmEPkK012c2JIzRGDbPIyI8OQI/edit?usp=sharing).
 
+# Download Responses
+To download the responses, go to the homepage and click on the Download
+Responses button. The responses will be downloaded in the form of a csv.
+![Download Responses button screenshot](download_responses_screenshot.png)
+
 # FAQ
 1. Can we have multiple questions?
 Yes

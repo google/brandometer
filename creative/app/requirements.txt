@@ -10,3 +10,6 @@ pyarrow==4.0.0
 pytest==6.2.3
 mock-firestore==0.10.0
 Flask-BasicAuth==0.2.0
+itsdangerous==2.0.1
+Jinja2==2.11.2
+MarkupSafe==1.1.1

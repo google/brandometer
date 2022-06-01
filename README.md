@@ -38,7 +38,9 @@ Run command: `gcloud auth login`. It will pop up a new login page to authorize y
 5. ```./deploy [project-id] [bigquery-location] [compute-region]```
 
 Use these commands to find possible values for:
+
 bigquery-location: `gcloud functions regions list`
+
 compute-region: `gcloud app regions list`
 
 If the deploy fails with an error, wait 5 minutes and try again. Sometimes a new project takes a little while to set up.

@@ -5,7 +5,7 @@ Flask-Bootstrap==3.3.7.1
 google-cloud-bigquery==2.14.0
 google-cloud-bigquery-storage==2.4.0
 pandas==1.2.4
-ipython==7.31.1
+ipython==8.10.0
 pyarrow==4.0.0
 pytest==6.2.3
 mock-firestore==0.10.0

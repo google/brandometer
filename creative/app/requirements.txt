@@ -6,7 +6,7 @@ google-cloud-bigquery==2.14.0
 google-cloud-bigquery-storage==2.4.0
 pandas==1.2.4
 ipython==7.31.1
-pyarrow==4.0.0
+pyarrow==14.0.1
 pytest==6.2.3
 mock-firestore==0.10.0
 Flask-BasicAuth==0.2.0
